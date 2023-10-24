@@ -11,7 +11,6 @@
             <result property="salary" column="salary" jdbcType="VARCHAR"/>
             <result property="city" column="city" jdbcType="VARCHAR"/>
             <result property="experience" column="experience" jdbcType="VARCHAR"/>
-            <result property="history" column="history" jdbcType="VARCHAR"/>
             <result property="tags" column="tags" jdbcType="VARCHAR"/>
             <result property="lastUpdateTime" column="last_update_time" jdbcType="TIMESTAMP"/>
             <result property="searchKeywords" column="search_keywords" jdbcType="VARCHAR"/>
@@ -23,15 +22,16 @@
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
             <result property="jobDetails" column="job_details" jdbcType="VARCHAR"/>
+            <result property="education" column="education" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,job_name,company_id,
         salary,city,experience,
-        history,tags,last_update_time,
-        search_keywords,job_description,job_location,
-        delete_flag,create_time,update_by,
-        update_time,create_by,job_details
+        tags,last_update_time,search_keywords,
+        job_description,job_location,delete_flag,
+        create_time,update_by,update_time,
+        create_by,job_details,education
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -47,22 +47,21 @@
     </delete>
     <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.example.webmagic.domain.JobInfo" useGeneratedKeys="true">
         insert into job_info
-        ( job_name,company_id
+        ( id,job_name,company_id
         ,salary,city,experience
-        ,history,tags,last_update_time
-        ,search_keywords,job_description,job_location
-        ,delete_flag,create_time,update_by
-        ,update_time,create_by,job_details,education
+        ,tags,last_update_time,search_keywords
+        ,job_description,job_location,delete_flag
+        ,create_time,update_by,update_time
+        ,create_by,job_details,education
         )
-        values (#{jobName,jdbcType=VARCHAR},#{companyId,jdbcType=INTEGER}
-               ,#{salary,jdbcType=VARCHAR},#{city,jdbcType=VARCHAR},#{experience,jdbcType=VARCHAR}
-               ,#{history,jdbcType=VARCHAR},#{tags,jdbcType=VARCHAR},#{lastUpdateTime,jdbcType=TIMESTAMP}
-               ,#{searchKeywords,jdbcType=VARCHAR},#{jobDescription,jdbcType=VARCHAR},#{jobLocation,jdbcType=VARCHAR}
-               ,#{deleteFlag,jdbcType=CHAR},#{createTime,jdbcType=TIMESTAMP},#{updateBy,jdbcType=VARCHAR}
-               ,#{updateTime,jdbcType=TIMESTAMP},#{createBy,jdbcType=VARCHAR},#{jobDetails,jdbcType=VARCHAR},#{education,jdbcType=VARCHAR}
-               )
+        values (#{id,jdbcType=INTEGER},#{jobName,jdbcType=VARCHAR},#{companyId,jdbcType=INTEGER}
+        ,#{salary,jdbcType=VARCHAR},#{city,jdbcType=VARCHAR},#{experience,jdbcType=VARCHAR}
+        ,#{tags,jdbcType=VARCHAR},#{lastUpdateTime,jdbcType=TIMESTAMP},#{searchKeywords,jdbcType=VARCHAR}
+        ,#{jobDescription,jdbcType=VARCHAR},#{jobLocation,jdbcType=VARCHAR},#{deleteFlag,jdbcType=CHAR}
+        ,#{createTime,jdbcType=TIMESTAMP},#{updateBy,jdbcType=VARCHAR},#{updateTime,jdbcType=TIMESTAMP}
+        ,#{createBy,jdbcType=VARCHAR},#{jobDetails,jdbcType=VARCHAR},#{education,jdbcType=VARCHAR}
+        )
     </insert>
-
     <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.example.webmagic.domain.JobInfo" useGeneratedKeys="true">
         insert into job_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -72,7 +71,6 @@
                 <if test="salary != null">salary,</if>
                 <if test="city != null">city,</if>
                 <if test="experience != null">experience,</if>
-                <if test="history != null">history,</if>
                 <if test="tags != null">tags,</if>
                 <if test="lastUpdateTime != null">last_update_time,</if>
                 <if test="searchKeywords != null">search_keywords,</if>
@@ -84,6 +82,7 @@
                 <if test="updateTime != null">update_time,</if>
                 <if test="createBy != null">create_by,</if>
                 <if test="jobDetails != null">job_details,</if>
+                <if test="education != null">education,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
                 <if test="id != null">#{id,jdbcType=INTEGER},</if>
@@ -92,7 +91,6 @@
                 <if test="salary != null">#{salary,jdbcType=VARCHAR},</if>
                 <if test="city != null">#{city,jdbcType=VARCHAR},</if>
                 <if test="experience != null">#{experience,jdbcType=VARCHAR},</if>
-                <if test="history != null">#{history,jdbcType=VARCHAR},</if>
                 <if test="tags != null">#{tags,jdbcType=VARCHAR},</if>
                 <if test="lastUpdateTime != null">#{lastUpdateTime,jdbcType=TIMESTAMP},</if>
                 <if test="searchKeywords != null">#{searchKeywords,jdbcType=VARCHAR},</if>
@@ -104,6 +102,7 @@
                 <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
                 <if test="createBy != null">#{createBy,jdbcType=VARCHAR},</if>
                 <if test="jobDetails != null">#{jobDetails,jdbcType=VARCHAR},</if>
+                <if test="education != null">#{education,jdbcType=VARCHAR},</if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.example.webmagic.domain.JobInfo">
@@ -123,9 +122,6 @@
                 </if>
                 <if test="experience != null">
                     experience = #{experience,jdbcType=VARCHAR},
-                </if>
-                <if test="history != null">
-                    history = #{history,jdbcType=VARCHAR},
                 </if>
                 <if test="tags != null">
                     tags = #{tags,jdbcType=VARCHAR},
@@ -160,6 +156,9 @@
                 <if test="jobDetails != null">
                     job_details = #{jobDetails,jdbcType=VARCHAR},
                 </if>
+                <if test="education != null">
+                    education = #{education,jdbcType=VARCHAR},
+                </if>
         </set>
         where   id = #{id,jdbcType=INTEGER} 
     </update>
@@ -171,7 +170,6 @@
             salary =  #{salary,jdbcType=VARCHAR},
             city =  #{city,jdbcType=VARCHAR},
             experience =  #{experience,jdbcType=VARCHAR},
-            history =  #{history,jdbcType=VARCHAR},
             tags =  #{tags,jdbcType=VARCHAR},
             last_update_time =  #{lastUpdateTime,jdbcType=TIMESTAMP},
             search_keywords =  #{searchKeywords,jdbcType=VARCHAR},
@@ -182,7 +180,8 @@
             update_by =  #{updateBy,jdbcType=VARCHAR},
             update_time =  #{updateTime,jdbcType=TIMESTAMP},
             create_by =  #{createBy,jdbcType=VARCHAR},
-            job_details =  #{jobDetails,jdbcType=VARCHAR}
+            job_details =  #{jobDetails,jdbcType=VARCHAR},
+            education =  #{education,jdbcType=VARCHAR}
         where   id = #{id,jdbcType=INTEGER} 
     </update>
 </mapper>

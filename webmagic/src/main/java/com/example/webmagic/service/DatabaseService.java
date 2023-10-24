@@ -1,9 +1,6 @@
 package com.example.webmagic.service;
 
-import com.example.webmagic.domain.CompanyInfo;
-import com.example.webmagic.domain.JobCompanyInfo;
-import com.example.webmagic.domain.JobDetailInfo;
-import com.example.webmagic.domain.JobInfo;
+import com.example.webmagic.domain.*;
 import com.example.webmagic.mapper.CompanyInfoMapper;
 import com.example.webmagic.mapper.JobInfoMapper;
 import org.slf4j.Logger;
@@ -13,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -123,5 +121,32 @@ public class DatabaseService {
         }
 
     }
+    @Transactional(readOnly = true)
+    public List<CompanyDetailInfo> getCompaniesForDetailScraping() {
+        // 这个方法应该返回需要爬取详情的公司列表
+        return companyInfoMapper.findCompaniesForDetailScraping();
+    }
+
+    @Transactional
+    public void updateCompanyDetails(Integer companyId, Date establishmentDate,
+                                     String registeredCapital, String legalRepresentative,
+                                     String companyAddress,String companyIntroduce) {
+        System.out.println("Entering updateCompanyDetails method.");
+
+        // 创建一个新的 CompanyInfo 对象来保存更新的数据
+        CompanyInfo companyInfo = new CompanyInfo();
+        companyInfo.setId(companyId);  // 设置公司ID
+        companyInfo.setEstablishmentDate(establishmentDate);  // 设置成立日期
+        companyInfo.setRegisteredCapital(registeredCapital);  // 设置注册资本
+        companyInfo.setLegalRepresentative(legalRepresentative);  // 设置法人代表
+        companyInfo.setCompanyAddress(companyAddress);  // 设置公司地址
+        companyInfo.setCompanyIntroduce(companyIntroduce);
+
+        // 调用 Mapper 方法来更新数据库
+        companyInfoMapper.updateCompanyDetails(companyInfo);
+
+        System.out.println("Exiting updateCompanyDetails method.");
+    }
+
 
 }

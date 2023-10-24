@@ -1,9 +1,13 @@
 package com.example.webmagic;
 
+import com.example.webmagic.domain.CompanyDetailInfo;
+import com.example.webmagic.domain.CompanyInfo;
 import com.example.webmagic.domain.JobDetailInfo;
 import com.example.webmagic.domain.JobInfo;
+import com.example.webmagic.pipeline.CompanyDetailPipeline;
 import com.example.webmagic.pipeline.ConsolePipeline;
 import com.example.webmagic.pipeline.JobDetailPipeline;
+import com.example.webmagic.processor.CompanyDetailProcessor;
 import com.example.webmagic.processor.JobDetailProcessor;
 import com.example.webmagic.service.DatabaseService;
 import com.example.webmagic.service.WebDriverService;
@@ -41,6 +45,12 @@ public class Application implements CommandLineRunner {
     @Autowired
     private WebDriverService webDriverService;
 
+    @Autowired
+    private CompanyDetailProcessor companyDetailProcessor;
+
+    @Autowired
+    private CompanyDetailPipeline companyDetailPipeline;
+
 
     public static void main(String[] args) {
         // 启动 Spring Boot 应用
@@ -73,6 +83,18 @@ public class Application implements CommandLineRunner {
             // 将 jobId 和 companyId 传递给 processor 和 pipeline
             detailSpider.setUUID(jobInfo.getJobId().toString() + "-" + jobInfo.getCompanyId().toString());
             detailSpider.run();  // 使用 detailSpider 实例运行爬虫
+        }
+        // 获取需要爬取详情的公司列表
+        List<CompanyDetailInfo> companyInfos = databaseService.getCompaniesForDetailScraping();
+        for (CompanyDetailInfo companyInfo : companyInfos) {
+            // 为每个公司创建并启动一个新的 Spider 实例
+            Spider companyDetailSpider = Spider.create(companyDetailProcessor)
+                    .addUrl(companyInfo.getCompanyWebsite())
+                    .addPipeline(companyDetailPipeline)
+                    .thread(1);
+            // 将 companyId 传递给 processor 和 pipeline
+            companyDetailSpider.setUUID(companyInfo.getCompanyId().toString());
+            companyDetailSpider.run();  // 使用 companyDetailSpider 实例运行爬虫
         }
         webDriverService.destroy();
     }

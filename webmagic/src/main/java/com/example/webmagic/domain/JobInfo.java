@@ -2,205 +2,355 @@ package com.example.webmagic.domain;
 
 import java.io.Serializable;
 import java.util.Date;
-import lombok.Data;
 
 /**
- * @TableName 职位信息表
+ * 
+ * @TableName job_info
  */
-@Data
 public class JobInfo implements Serializable {
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getJobName() {
-        return jobName;
-    }
-
-    public void setJobName(String jobName) {
-        this.jobName = jobName;
-    }
-
-    public Integer getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(Integer companyId) {
-        this.companyId = companyId;
-    }
-
-    public String getSalary() {
-        return salary;
-    }
-
-    public void setSalary(String salary) {
-        this.salary = salary;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getExperience() {
-        return experience;
-    }
-
-    public void setExperience(String experience) {
-        this.experience = experience;
-    }
-
-    public String getHistory() {
-        return history;
-    }
-
-    public void setHistory(String history) {
-        this.history = history;
-    }
-
-    public String getTags() {
-        return tags;
-    }
-
-    public void setTags(String tags) {
-        this.tags = tags;
-    }
-
-    public Date getLastUpdateTime() {
-        return lastUpdateTime;
-    }
-
-    public void setLastUpdateTime(Date lastUpdateTime) {
-        this.lastUpdateTime = lastUpdateTime;
-    }
-
-    public String getSearchKeywords() {
-        return searchKeywords;
-    }
-
-    public void setSearchKeywords(String searchKeywords) {
-        this.searchKeywords = searchKeywords;
-    }
-
-    public String getJobDescription() {
-        return jobDescription;
-    }
-
-    public void setJobDescription(String jobDescription) {
-        this.jobDescription = jobDescription;
-    }
-
-    public String getJobLocation() {
-        return jobLocation;
-    }
-
-    public void setJobLocation(String jobLocation) {
-        this.jobLocation = jobLocation;
-    }
-
-    public String getDeleteFlag() {
-        return deleteFlag;
-    }
-
-    public void setDeleteFlag(String deleteFlag) {
-        this.deleteFlag = deleteFlag;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getUpdateBy() {
-        return updateBy;
-    }
-
-    public void setUpdateBy(String updateBy) {
-        this.updateBy = updateBy;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public String getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(String createBy) {
-        this.createBy = createBy;
-    }
-
-    public String getJobDetails() {
-        return jobDetails;
-    }
-
-    public void setJobDetails(String jobDetails) {
-        this.jobDetails = jobDetails;
-    }
-
+    /**
+     * 
+     */
     private Integer id;
 
+    /**
+     * 职位名
+     */
     private String jobName;
 
+    /**
+     * 公司id
+     */
     private Integer companyId;
 
+    /**
+     * 薪资
+     */
     private String salary;
 
+    /**
+     * 城市
+     */
     private String city;
 
+    /**
+     * 经验
+     */
     private String experience;
 
-    private String history;
-
+    /**
+     * 标签
+     */
     private String tags;
 
+    /**
+     * 最后更新时间
+     */
     private Date lastUpdateTime;
 
+    /**
+     * 搜索关键字
+     */
     private String searchKeywords;
 
+    /**
+     * 职位描述
+     */
     private String jobDescription;
 
+    /**
+     * 工作地点
+     */
     private String jobLocation;
 
+    /**
+     * 删除标志
+     */
     private String deleteFlag;
 
+    /**
+     * 创建时间
+     */
     private Date createTime;
 
+    /**
+     * 更新人
+     */
     private String updateBy;
 
+    /**
+     * 更新时间
+     */
     private Date updateTime;
 
+    /**
+     * 创建人
+     */
     private String createBy;
 
+    /**
+     * 详情页链接
+     */
     private String jobDetails;
 
-    public String getEducation() {
-        return education;
-    }
-
-    public void setEducation(String education) {
-        this.education = education;
-    }
-
+    /**
+     * 学历
+     */
     private String education;
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 
+     */
+    public Integer getId() {
+        return id;
+    }
+
+    /**
+     * 
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    /**
+     * 职位名
+     */
+    public String getJobName() {
+        return jobName;
+    }
+
+    /**
+     * 职位名
+     */
+    public void setJobName(String jobName) {
+        this.jobName = jobName;
+    }
+
+    /**
+     * 公司id
+     */
+    public Integer getCompanyId() {
+        return companyId;
+    }
+
+    /**
+     * 公司id
+     */
+    public void setCompanyId(Integer companyId) {
+        this.companyId = companyId;
+    }
+
+    /**
+     * 薪资
+     */
+    public String getSalary() {
+        return salary;
+    }
+
+    /**
+     * 薪资
+     */
+    public void setSalary(String salary) {
+        this.salary = salary;
+    }
+
+    /**
+     * 城市
+     */
+    public String getCity() {
+        return city;
+    }
+
+    /**
+     * 城市
+     */
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    /**
+     * 经验
+     */
+    public String getExperience() {
+        return experience;
+    }
+
+    /**
+     * 经验
+     */
+    public void setExperience(String experience) {
+        this.experience = experience;
+    }
+
+    /**
+     * 标签
+     */
+    public String getTags() {
+        return tags;
+    }
+
+    /**
+     * 标签
+     */
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    /**
+     * 最后更新时间
+     */
+    public Date getLastUpdateTime() {
+        return lastUpdateTime;
+    }
+
+    /**
+     * 最后更新时间
+     */
+    public void setLastUpdateTime(Date lastUpdateTime) {
+        this.lastUpdateTime = lastUpdateTime;
+    }
+
+    /**
+     * 搜索关键字
+     */
+    public String getSearchKeywords() {
+        return searchKeywords;
+    }
+
+    /**
+     * 搜索关键字
+     */
+    public void setSearchKeywords(String searchKeywords) {
+        this.searchKeywords = searchKeywords;
+    }
+
+    /**
+     * 职位描述
+     */
+    public String getJobDescription() {
+        return jobDescription;
+    }
+
+    /**
+     * 职位描述
+     */
+    public void setJobDescription(String jobDescription) {
+        this.jobDescription = jobDescription;
+    }
+
+    /**
+     * 工作地点
+     */
+    public String getJobLocation() {
+        return jobLocation;
+    }
+
+    /**
+     * 工作地点
+     */
+    public void setJobLocation(String jobLocation) {
+        this.jobLocation = jobLocation;
+    }
+
+    /**
+     * 删除标志
+     */
+    public String getDeleteFlag() {
+        return deleteFlag;
+    }
+
+    /**
+     * 删除标志
+     */
+    public void setDeleteFlag(String deleteFlag) {
+        this.deleteFlag = deleteFlag;
+    }
+
+    /**
+     * 创建时间
+     */
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    /**
+     * 创建时间
+     */
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    /**
+     * 更新人
+     */
+    public String getUpdateBy() {
+        return updateBy;
+    }
+
+    /**
+     * 更新人
+     */
+    public void setUpdateBy(String updateBy) {
+        this.updateBy = updateBy;
+    }
+
+    /**
+     * 更新时间
+     */
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    /**
+     * 更新时间
+     */
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    /**
+     * 创建人
+     */
+    public String getCreateBy() {
+        return createBy;
+    }
+
+    /**
+     * 创建人
+     */
+    public void setCreateBy(String createBy) {
+        this.createBy = createBy;
+    }
+
+    /**
+     * 详情页链接
+     */
+    public String getJobDetails() {
+        return jobDetails;
+    }
+
+    /**
+     * 详情页链接
+     */
+    public void setJobDetails(String jobDetails) {
+        this.jobDetails = jobDetails;
+    }
+
+    /**
+     * 学历
+     */
+    public String getEducation() {
+        return education;
+    }
+
+    /**
+     * 学历
+     */
+    public void setEducation(String education) {
+        this.education = education;
+    }
 
     @Override
     public String toString() {
@@ -214,7 +364,6 @@ public class JobInfo implements Serializable {
         sb.append(", salary=").append(salary);
         sb.append(", city=").append(city);
         sb.append(", experience=").append(experience);
-        sb.append(", history=").append(history);
         sb.append(", tags=").append(tags);
         sb.append(", lastUpdateTime=").append(lastUpdateTime);
         sb.append(", searchKeywords=").append(searchKeywords);

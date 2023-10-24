@@ -1,10 +1,13 @@
 package com.example.webmagic.mapper;
 
+import com.example.webmagic.domain.CompanyDetailInfo;
 import com.example.webmagic.domain.CompanyInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
 
 
 /**
@@ -36,4 +39,17 @@ public interface CompanyInfoMapper {
 
     @Update("UPDATE company_info SET company_website = #{companyWebsite} WHERE id = #{companyId}")
     void updateCompanyWebsite(@Param("companyId") Integer companyId, @Param("companyWebsite") String companyWebsite);
+
+    @Select("SELECT * FROM company_info WHERE company_website IS NOT NULL AND company_website != ''")
+    List<CompanyInfo> findCompaniesWithWebsite();
+
+    @Update("UPDATE company_info SET establishment_date = #{establishmentDate}, registered_capital = #{registeredCapital}, " +
+            "legal_representative = #{legalRepresentative}, company_address = #{companyAddress}, company_introduce = #{companyIntroduce} WHERE id = #{id}")
+    int updateCompanyDetails(CompanyInfo companyInfo);
+
+
+    @Select("SELECT id AS companyId, company_website AS CompanyWebsite FROM company_info WHERE company_introduce IS NULL OR company_introduce = ''")
+    List<CompanyDetailInfo> findCompaniesForDetailScraping();
+
+
 }

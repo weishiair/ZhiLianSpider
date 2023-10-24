@@ -19,6 +19,8 @@
             <result property="registeredCapital" column="registered_capital" jdbcType="VARCHAR"/>
             <result property="companyAddress" column="company_address" jdbcType="VARCHAR"/>
             <result property="companyWebsite" column="company_website" jdbcType="VARCHAR"/>
+            <result property="legalRepresentative" column="legal_representative" jdbcType="VARCHAR"/>
+            <result property="companyIntroduce" column="company_introduce" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -26,7 +28,8 @@
         company_nature,last_update_time,delete_flag,
         create_time,create_by,update_time,
         update_by,establishment_date,registered_capital,
-        company_address,company_website
+        company_address,company_website,legal_representative,
+        company_introduce
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -46,12 +49,14 @@
         ,company_nature,last_update_time,delete_flag
         ,create_time,create_by,update_time
         ,update_by,establishment_date,registered_capital
-        ,company_address,company_website)
+        ,company_address,company_website,legal_representative
+        ,company_introduce)
         values (#{id,jdbcType=INTEGER},#{companyName,jdbcType=VARCHAR},#{companySize,jdbcType=VARCHAR}
         ,#{companyNature,jdbcType=VARCHAR},#{lastUpdateTime,jdbcType=TIMESTAMP},#{deleteFlag,jdbcType=CHAR}
         ,#{createTime,jdbcType=TIMESTAMP},#{createBy,jdbcType=VARCHAR},#{updateTime,jdbcType=TIMESTAMP}
         ,#{updateBy,jdbcType=VARCHAR},#{establishmentDate,jdbcType=TIMESTAMP},#{registeredCapital,jdbcType=VARCHAR}
-        ,#{companyAddress,jdbcType=VARCHAR},#{companyWebsite,jdbcType=VARCHAR})
+        ,#{companyAddress,jdbcType=VARCHAR},#{companyWebsite,jdbcType=VARCHAR},#{legalRepresentative,jdbcType=VARCHAR}
+        ,#{companyIntroduce,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.example.webmagic.domain.CompanyInfo" useGeneratedKeys="true">
         insert into company_info
@@ -70,6 +75,8 @@
                 <if test="registeredCapital != null">registered_capital,</if>
                 <if test="companyAddress != null">company_address,</if>
                 <if test="companyWebsite != null">company_website,</if>
+                <if test="legalRepresentative != null">legal_representative,</if>
+                <if test="companyIntroduce != null">company_introduce,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
                 <if test="id != null">#{id,jdbcType=INTEGER},</if>
@@ -86,6 +93,8 @@
                 <if test="registeredCapital != null">#{registeredCapital,jdbcType=VARCHAR},</if>
                 <if test="companyAddress != null">#{companyAddress,jdbcType=VARCHAR},</if>
                 <if test="companyWebsite != null">#{companyWebsite,jdbcType=VARCHAR},</if>
+                <if test="legalRepresentative != null">#{legalRepresentative,jdbcType=VARCHAR},</if>
+                <if test="companyIntroduce != null">#{companyIntroduce,jdbcType=VARCHAR},</if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.example.webmagic.domain.CompanyInfo">
@@ -130,6 +139,12 @@
                 <if test="companyWebsite != null">
                     company_website = #{companyWebsite,jdbcType=VARCHAR},
                 </if>
+                <if test="legalRepresentative != null">
+                    legal_representative = #{legalRepresentative,jdbcType=VARCHAR},
+                </if>
+                <if test="companyIntroduce != null">
+                    company_introduce = #{companyIntroduce,jdbcType=VARCHAR},
+                </if>
         </set>
         where   id = #{id,jdbcType=INTEGER} 
     </update>
@@ -148,35 +163,9 @@
             establishment_date =  #{establishmentDate,jdbcType=TIMESTAMP},
             registered_capital =  #{registeredCapital,jdbcType=VARCHAR},
             company_address =  #{companyAddress,jdbcType=VARCHAR},
-            company_website =  #{companyWebsite,jdbcType=VARCHAR}
+            company_website =  #{companyWebsite,jdbcType=VARCHAR},
+            legal_representative =  #{legalRepresentative,jdbcType=VARCHAR},
+            company_introduce =  #{companyIntroduce,jdbcType=VARCHAR}
         where   id = #{id,jdbcType=INTEGER} 
     </update>
-    <select id="findByName" parameterType="String" resultType="com.example.webmagic.domain.CompanyInfo">
-        SELECT * FROM company_info WHERE company_name = #{companyName}
-    </select>
-    <select id="selectAllById" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from 公司信息
-        where
-        id = #{id}
-    </select>
-    <select id="selectAllById" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from 公司信息
-        <where>
-            <if test="id != null">
-                id = #{id}
-            </if>
-        </where>
-    </select>
-    <select id="selectAllByIdAndCompanyName" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from 公司信息
-        where
-        id = #{id}
-        AND company_name = #{companyName}
-    </select>
 </mapper>
