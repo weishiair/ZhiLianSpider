@@ -10,6 +10,7 @@ import com.example.webmagic.pipeline.JobDetailPipeline;
 import com.example.webmagic.processor.CompanyDetailProcessor;
 import com.example.webmagic.processor.JobDetailProcessor;
 import com.example.webmagic.service.DatabaseService;
+import com.example.webmagic.service.UserInputService;
 import com.example.webmagic.service.WebDriverService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -60,9 +61,12 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        UserInputService userInputService = new UserInputService();
+        String city = userInputService.getCity();
+        String keyword = userInputService.getKeyword();
         // 创建并启动主爬虫任务
         Spider spider = Spider.create(zhilianJobProcessor)
-                .addUrl("https://sou.zhaopin.com/?jl=801&kw=soildworks&p=1")
+                .addUrl(String.format("https://sou.zhaopin.com/?jl=%s&kw=%s&p=1", city, keyword))
                 .setDownloader(new SeleniumDownloader(webDriverService))
                 .addPipeline(databasePipeline)
                 .setScheduler(new QueueScheduler()

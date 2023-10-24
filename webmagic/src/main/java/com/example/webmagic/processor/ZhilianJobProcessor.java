@@ -1,5 +1,6 @@
 package com.example.webmagic.processor;
 
+import com.example.webmagic.config.SearchConfig;
 import com.example.webmagic.domain.JobCompanyInfo;
 import com.example.webmagic.domain.JobInfo;
 import com.example.webmagic.domain.CompanyInfo;
@@ -27,28 +28,42 @@ public class ZhilianJobProcessor implements PageProcessor {
 
     @Autowired
     private WebDriverService webDriverService;
+    private final DatabaseService databaseService;
+
+    private final SearchConfig searchConfig;
+    private String city;
+    private String keyword;
+
+
+    @Autowired
+    public ZhilianJobProcessor(WebDriverService webDriverService, DatabaseService databaseService, SearchConfig searchConfig) {
+        this.webDriverService = webDriverService;
+        this.databaseService = databaseService;
+        this.searchConfig = searchConfig;
+    }
+
 
 
     private Site site = Site.me().setRetryTimes(3).setSleepTime(1000).setUserAgent(UserAgentUtils.randomUserAgent());
-    private final DatabaseService databaseService;
 
-    @Autowired
-    public ZhilianJobProcessor(DatabaseService databaseService) {
-        this.databaseService = databaseService;
-    }
+
+
 
     @Override
     public void process(Page page) {
+        String city = searchConfig.getCity();
+        String keyword = searchConfig.getKeyword();
         WebDriver driver = webDriverService.getWebDriver();
         try {
-            processPage(page, driver);
+            processPage(page, driver, city, keyword);  // 传递城市和关键词参数
         } finally {
             //driver.quit();  // 确保在处理完成后关闭WebDriver实例
         }
     }
 
-    public void processPage(Page page, WebDriver driver) {
-
+    public void processPage(Page page, WebDriver driver,String city, String keyword) {
+        // 构建URL
+        String url = String.format("https://sou.zhaopin.com/?jl=%s&kw=%s&p=1", city, keyword);
         try {
             Thread.sleep(5000);  // 等待5秒以确保页面加载完成
         } catch (InterruptedException e) {
