@@ -1,11 +1,13 @@
 package com.example.webmagic.processor;
 
 import com.example.webmagic.config.SearchConfig;
+import com.example.webmagic.config.WebDriverProvider;
 import com.example.webmagic.domain.JobCompanyInfo;
 import com.example.webmagic.domain.JobInfo;
 import com.example.webmagic.domain.CompanyInfo;
 import com.example.webmagic.service.DatabaseService;
 import com.example.webmagic.service.WebDriverService;
+import com.example.webmagic.util.SliderHandler;
 import com.example.webmagic.util.UserAgentUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -18,16 +20,17 @@ import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
 import us.codecraft.webmagic.selector.Html;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class ZhilianJobProcessor implements PageProcessor {
 
     @Autowired
     private WebDriverService webDriverService;
+    @Autowired
+    private WebDriverProvider webDriverProvider;  // 注入 WebDriverProvider
+    @Autowired
+    private SliderHandler sliderHandler;  // 注入 SliderHandler
     private final DatabaseService databaseService;
 
     private final SearchConfig searchConfig;
@@ -36,8 +39,8 @@ public class ZhilianJobProcessor implements PageProcessor {
 
 
     @Autowired
-    public ZhilianJobProcessor(WebDriverService webDriverService, DatabaseService databaseService, SearchConfig searchConfig) {
-        this.webDriverService = webDriverService;
+    public ZhilianJobProcessor(WebDriverProvider webDriverProvider, DatabaseService databaseService, SearchConfig searchConfig) {
+        this.webDriverProvider = webDriverProvider;  // 更新为 WebDriverProvider
         this.databaseService = databaseService;
         this.searchConfig = searchConfig;
     }
@@ -47,11 +50,11 @@ public class ZhilianJobProcessor implements PageProcessor {
 
     @Override
     public void process(Page page) {
-        String city = searchConfig.getCity();
-        String keyword = searchConfig.getKeyword();
-        WebDriver driver = webDriverService.getWebDriver();
+        this.city = searchConfig.getCity();  // 设置city字段的值
+        this.keyword = searchConfig.getKeyword();  // 设置keyword字段的值
+        WebDriver driver = webDriverProvider.getWebDriver();
         try {
-            processPage(page, driver, city, keyword);  // 传递城市和关键词参数
+            processPage(page, driver, this.city, this.keyword);  // 传递城市和关键词字段
         } finally {
             //driver.quit();  // 确保在处理完成后关闭WebDriver实例
         }
@@ -60,10 +63,16 @@ public class ZhilianJobProcessor implements PageProcessor {
     public void processPage(Page page, WebDriver driver,String city, String keyword) {
         // 构建URL
         String url = String.format("https://sou.zhaopin.com/?jl=%s&kw=%s&p=1", city, keyword);
+        System.out.println("Constructed URL: " + url);  // 打印构造的URL
         try {
             Thread.sleep(5000);  // 等待5秒以确保页面加载完成
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+        // 检测滑块验证码
+        boolean isSliderPresent = isSliderPresent(driver);
+        if (isSliderPresent) {
+            sliderHandler.handleSlider(driver);  // 调用 SliderHandler 来处理滑块
         }
 
         boolean hasNextPage = true;
@@ -143,6 +152,13 @@ public class ZhilianJobProcessor implements PageProcessor {
     @Override
     public Site getSite() {
         return site;
+    }
+
+    public boolean isSliderPresent(WebDriver driver) {
+        // 使用 findElements 方法查找元素
+        List<WebElement> sliders = driver.findElements(By.id("nc_1_nocaptcha"));
+        // 检查返回的列表是否为空
+        return !sliders.isEmpty();
     }
 
 }

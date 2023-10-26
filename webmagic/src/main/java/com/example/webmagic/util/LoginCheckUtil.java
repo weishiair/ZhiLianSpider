@@ -1,5 +1,6 @@
 package com.example.webmagic.util;
 
+import com.example.webmagic.config.WebDriverProvider;
 import com.example.webmagic.service.WebDriverService;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
@@ -17,7 +18,7 @@ import java.util.List;
 public class LoginCheckUtil {
 
     @Autowired
-    private WebDriverService webDriverService;
+    private WebDriverProvider webDriverProvider;  // 注入 WebDriverProvider
 
     /**
      * 检查用户是否已登录
@@ -26,7 +27,7 @@ public class LoginCheckUtil {
      */
     public boolean isUserLoggedIn() {
         System.out.println("进入检查方法");
-        WebDriver driver = webDriverService.getWebDriver();
+        WebDriver driver = webDriverProvider.getWebDriver();
         driver.get("https://www.zhaopin.com/");  // 替换为你的网站URL
 
         // 创建WebDriverWait实例，并指定最长等待时间（例如10秒）

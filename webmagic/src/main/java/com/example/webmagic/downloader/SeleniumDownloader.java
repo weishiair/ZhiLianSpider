@@ -1,6 +1,6 @@
 package com.example.webmagic.downloader;
 
-import com.example.webmagic.service.WebDriverService;
+import com.example.webmagic.config.WebDriverProvider;
 import com.example.webmagic.util.LoginCheckUtil;
 import com.example.webmagic.util.LoginUtil;
 import org.openqa.selenium.WebDriver;
@@ -17,28 +17,29 @@ public class SeleniumDownloader implements Downloader {
 
     private final LoginUtil loginUtil;
     private final LoginCheckUtil checkLoginUtil;
-    private final WebDriverService webDriverService;
+    private final WebDriverProvider webDriverProvider;  // 更新为 WebDriverProvider
 
     @Autowired
-    public SeleniumDownloader(LoginUtil loginUtil, LoginCheckUtil checkLoginUtil, WebDriverService webDriverService) {
+    public SeleniumDownloader(LoginUtil loginUtil, LoginCheckUtil checkLoginUtil, WebDriverProvider webDriverProvider) {
         this.loginUtil = loginUtil;
         this.checkLoginUtil = checkLoginUtil;
-        this.webDriverService = webDriverService;
+        this.webDriverProvider = webDriverProvider;  // 更新为 WebDriverProvider
         System.out.println("SeleniumDownloader constructor called");
     }
+
     @Override
     public Page download(Request request, Task task) {
         System.out.println("LoginUtil is: " + loginUtil);
         System.out.println("CheckLoginUtil is: " + checkLoginUtil);
-        System.out.println("WebDriverService is: " + webDriverService);
+        System.out.println("WebDriverProvider is: " + webDriverProvider);  // 更新为 WebDriverProvider
 
-        // 检查WebDriverService是否为空
-        if (webDriverService == null) {
-            System.err.println("webDriverService is null!");
+        // 检查WebDriverProvider是否为空
+        if (webDriverProvider == null) {
+            System.err.println("webDriverProvider is null!");  // 更新错误消息
             return null;  // 或抛出一个异常
         }
 
-        WebDriver driver = webDriverService.getWebDriver();
+        WebDriver driver = webDriverProvider.getWebDriver();  // 从 WebDriverProvider 获取 WebDriver 实例
         System.out.println("WebDriver is: " + driver);
 
         // 检查WebDriver是否为空
@@ -47,14 +48,10 @@ public class SeleniumDownloader implements Downloader {
             return null;  // 或抛出一个异常
         }
 
-        // 检查用户是否已登录，如果没有，则尝试登录
-        boolean isLoggedIn = checkLoginUtil.isUserLoggedIn();
-        if (!isLoggedIn) {
-            loginUtil.loginIfNecessary();
-        }
-
         // 获取请求的网页内容
+        System.out.println("Requesting URL: " + request.getUrl());
         driver.get(request.getUrl());  // 使用重用的WebDriver实例
+        System.out.println("Actual URL after redirection if any: " + driver.getCurrentUrl());
         Page page = new Page();
         page.setRawText(driver.getPageSource());
         page.setUrl(new PlainText(request.getUrl()));
@@ -62,6 +59,7 @@ public class SeleniumDownloader implements Downloader {
 
         return page;
     }
+
 
     @Override
     public void setThread(int thread) {
