@@ -13,6 +13,8 @@ public class WebDriverService {
 
     private WebDriver webDriver;
 
+
+
     @PostConstruct  // 该方法在Spring容器初始化该bean后立即执行
     public void init() {
         System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome\\Application\\chromedriver.exe");
@@ -27,7 +29,12 @@ public class WebDriverService {
 
     }
 
+
+
+
+
     public WebDriver getWebDriver() {
+        System.out.println("Returning WebDriver: " + webDriver);
         return webDriver;
     }
 

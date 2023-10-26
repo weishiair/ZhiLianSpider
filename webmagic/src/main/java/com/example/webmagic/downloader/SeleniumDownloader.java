@@ -1,6 +1,8 @@
 package com.example.webmagic.downloader;
 
 import com.example.webmagic.service.WebDriverService;
+import com.example.webmagic.util.LoginCheckUtil;
+import com.example.webmagic.util.LoginUtil;
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,56 +12,59 @@ import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.downloader.Downloader;
 import us.codecraft.webmagic.selector.PlainText;
 
-import java.util.Scanner;
-
 @Component
 public class SeleniumDownloader implements Downloader {
 
-
+    private final LoginUtil loginUtil;
+    private final LoginCheckUtil checkLoginUtil;
     private final WebDriverService webDriverService;
 
     @Autowired
-    public SeleniumDownloader(WebDriverService webDriverService) {
+    public SeleniumDownloader(LoginUtil loginUtil, LoginCheckUtil checkLoginUtil, WebDriverService webDriverService) {
+        this.loginUtil = loginUtil;
+        this.checkLoginUtil = checkLoginUtil;
         this.webDriverService = webDriverService;
-        System.out.println("WebDriverService is injected: " + (webDriverService != null));
+        System.out.println("SeleniumDownloader constructor called");
     }
-
-
-    static {
-        System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome\\Application\\chromedriver.exe");
-    }
-
-    public void login(WebDriver driver) {
-        driver.get("https://passport.zhaopin.com/login?bkUrl=%2F%2Fi.zhaopin.com%2Fblank%3Fhttps%3A%2F%2Fwww.zhaopin.com%2Fbeijing%2F");
-        System.out.println("请在浏览器中完成登录，然后在这里输入任意字符并按回车键继续...");
-        Scanner scanner = new Scanner(System.in);
-        scanner.next();  // 等待用户输入
-        scanner.close();  // 关闭scanner以释放资源
-    }
-
     @Override
     public Page download(Request request, Task task) {
+        System.out.println("LoginUtil is: " + loginUtil);
+        System.out.println("CheckLoginUtil is: " + checkLoginUtil);
         System.out.println("WebDriverService is: " + webDriverService);
+
+        // 检查WebDriverService是否为空
+        if (webDriverService == null) {
+            System.err.println("webDriverService is null!");
+            return null;  // 或抛出一个异常
+        }
+
         WebDriver driver = webDriverService.getWebDriver();
         System.out.println("WebDriver is: " + driver);
-        try {
-            login(driver);  // 调用登录方法
-            driver.get(request.getUrl());  // 导航到要抓取的页面
-            String pageSource = driver.getPageSource();
-            Page page = new Page();
-            page.setRawText(pageSource);
-            page.setUrl(new PlainText(request.getUrl()));
-            page.setRequest(request);
-            page.putField("webDriver", driver);  // 将WebDriver实例存储在Page对象中
-            return page;
-        } finally {
-            //driver.close();
+
+        // 检查WebDriver是否为空
+        if (driver == null) {
+            System.err.println("WebDriver is null!");
+            return null;  // 或抛出一个异常
         }
+
+        // 检查用户是否已登录，如果没有，则尝试登录
+        boolean isLoggedIn = checkLoginUtil.isUserLoggedIn();
+        if (!isLoggedIn) {
+            loginUtil.loginIfNecessary();
+        }
+
+        // 获取请求的网页内容
+        driver.get(request.getUrl());  // 使用重用的WebDriver实例
+        Page page = new Page();
+        page.setRawText(driver.getPageSource());
+        page.setUrl(new PlainText(request.getUrl()));
+        page.setRequest(request);
+
+        return page;
     }
 
     @Override
-    public void setThread(int threadNum) {
-
+    public void setThread(int thread) {
+        // 此方法可以根据需要实现
     }
 }
-

@@ -3,7 +3,9 @@ package com.example.webmagic.service;
 import org.springframework.stereotype.Service;
 
 import java.util.Scanner;
-
+/*
+* 用户输入服务
+* */
 @Service
 public class UserInputService {
 

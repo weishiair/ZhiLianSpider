@@ -42,11 +42,7 @@ public class ZhilianJobProcessor implements PageProcessor {
         this.searchConfig = searchConfig;
     }
 
-
-
     private Site site = Site.me().setRetryTimes(3).setSleepTime(1000).setUserAgent(UserAgentUtils.randomUserAgent());
-
-
 
 
     @Override

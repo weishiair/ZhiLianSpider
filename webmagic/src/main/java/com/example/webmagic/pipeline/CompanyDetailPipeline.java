@@ -40,7 +40,7 @@ public class CompanyDetailPipeline implements Pipeline {
             try {
                 establishmentDate = new SimpleDateFormat("yyyy-MM-dd").parse(establishmentDateStr);
             } catch (ParseException e) {
-                e.printStackTrace();  // 打印解析异常，您也可以选择记录或处理异常
+                e.printStackTrace();  // 打印解析异常
             }
         }
 

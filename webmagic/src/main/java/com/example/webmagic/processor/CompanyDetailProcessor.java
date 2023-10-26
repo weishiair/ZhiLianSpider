@@ -47,7 +47,7 @@ public class CompanyDetailProcessor implements PageProcessor {
             String registeredCapital = document.select("li:has(label:contains(注册资本)) em").text();
             String legalRepresentative = document.select("li:has(label:contains(法人代表)) em").text();
             String companyAddress = document.select("div.map-box address").text();
-            // 新增代码：提取公司的信息
+            // 提取公司的信息
             String companyIntroduce = document.select("div.company-show__content__description").text();
 
             // 将提取的数据存储在Page对象中

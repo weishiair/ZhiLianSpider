@@ -12,6 +12,8 @@ import com.example.webmagic.processor.JobDetailProcessor;
 import com.example.webmagic.service.DatabaseService;
 import com.example.webmagic.service.UserInputService;
 import com.example.webmagic.service.WebDriverService;
+import com.example.webmagic.util.LoginCheckUtil;
+import com.example.webmagic.util.LoginUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -52,6 +54,12 @@ public class Application implements CommandLineRunner {
     @Autowired
     private CompanyDetailPipeline companyDetailPipeline;
 
+    @Autowired
+    private LoginUtil loginUtil;
+
+    @Autowired
+    private LoginCheckUtil LogincheckUtil;
+
 
     public static void main(String[] args) {
         // 启动 Spring Boot 应用
@@ -64,10 +72,16 @@ public class Application implements CommandLineRunner {
         UserInputService userInputService = new UserInputService();
         String city = userInputService.getCity();
         String keyword = userInputService.getKeyword();
+        loginUtil.loginIfNecessary();
+        boolean isLoggedIn = LogincheckUtil.isUserLoggedIn();
+        if (!isLoggedIn) {
+            System.err.println("登录失败，终止爬虫.");
+            return;
+        }
         // 创建并启动主爬虫任务
         Spider spider = Spider.create(zhilianJobProcessor)
                 .addUrl(String.format("https://sou.zhaopin.com/?jl=%s&kw=%s&p=1", city, keyword))
-                .setDownloader(new SeleniumDownloader(webDriverService))
+                .setDownloader(new SeleniumDownloader(loginUtil,LogincheckUtil,webDriverService))
                 .addPipeline(databasePipeline)
                 .setScheduler(new QueueScheduler()
                         .setDuplicateRemover(new BloomFilterDuplicateRemover(10000000)))  // 10000000是预期的URL数量
