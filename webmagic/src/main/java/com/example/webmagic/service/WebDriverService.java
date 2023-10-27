@@ -4,13 +4,9 @@ import com.example.webmagic.config.WebDriverProvider;
 import com.example.webmagic.util.LoginUtil;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import java.util.Date;
 import java.util.List;
 
@@ -42,7 +38,7 @@ public class WebDriverService {
         webDriver.navigate().to("https://passport.zhaopin.com");
         System.out.println("Navigated to https://passport.zhaopin.com for the first time");
 
-// 检查当前的URL，并在必要时导航到正确的域
+        // 检查当前的URL，并在必要时导航到正确的域
         String currentUrl = webDriver.getCurrentUrl();
         if (!currentUrl.contains("i.zhaopin.com")) {
             webDriver.navigate().to("https://i.zhaopin.com");
@@ -91,7 +87,7 @@ public class WebDriverService {
         webDriver.navigate().refresh();
         System.out.println("Refreshed the page: " + webDriver.getCurrentUrl());
 
-// 或者尝试导航到你想要的 URL
+        // 或者尝试导航到你想要的 URL
         webDriver.navigate().to("https://i.zhaopin.com");
         System.out.println("Navigated to https://i.zhaopin.com: " + webDriver.getCurrentUrl());
 

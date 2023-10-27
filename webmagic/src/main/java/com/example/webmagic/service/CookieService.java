@@ -38,4 +38,9 @@ public class CookieService {
     public List<Cookie> getAllCookies() {
         return cookieMapper.findAllCookies();
     }
+
+    @Transactional
+    public void deleteAllCookies() {
+        cookieMapper.deleteAllCookies();
+    }
 }

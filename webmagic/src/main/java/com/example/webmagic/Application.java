@@ -2,14 +2,14 @@ package com.example.webmagic;
 
 import com.example.webmagic.config.WebDriverProvider;
 import com.example.webmagic.domain.CompanyDetailInfo;
-import com.example.webmagic.domain.CompanyInfo;
 import com.example.webmagic.domain.JobDetailInfo;
-import com.example.webmagic.domain.JobInfo;
+import com.example.webmagic.downloader.SeleniumDownloader;
 import com.example.webmagic.pipeline.CompanyDetailPipeline;
-import com.example.webmagic.pipeline.ConsolePipeline;
+import com.example.webmagic.pipeline.DatabasePipeline;
 import com.example.webmagic.pipeline.JobDetailPipeline;
 import com.example.webmagic.processor.CompanyDetailProcessor;
 import com.example.webmagic.processor.JobDetailProcessor;
+import com.example.webmagic.processor.ZhilianJobProcessor;
 import com.example.webmagic.service.DatabaseService;
 import com.example.webmagic.service.UserInputService;
 import com.example.webmagic.service.WebDriverService;
@@ -20,9 +20,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import us.codecraft.webmagic.Spider;
-import com.example.webmagic.processor.ZhilianJobProcessor;
-import com.example.webmagic.downloader.SeleniumDownloader;
-import com.example.webmagic.pipeline.DatabasePipeline;
 import us.codecraft.webmagic.scheduler.BloomFilterDuplicateRemover;
 import us.codecraft.webmagic.scheduler.QueueScheduler;
 
@@ -77,9 +74,21 @@ public class Application implements CommandLineRunner {
         String keyword = userInputService.getKeyword();
 
         // 尝试应用之前保存的 cookies
-        webDriverService.applyCookies();  // 正确的方法调用
-        loginUtil.loginIfNecessary();
+        webDriverService.applyCookies();
+
         boolean isLoggedIn = LogincheckUtil.isUserLoggedIn();
+        int retryCount = 0;
+        int maxRetries = 3;  // 设置最大重试次数，例如3次
+        while (!isLoggedIn && retryCount < maxRetries) {
+            loginUtil.loginIfNecessary();
+            isLoggedIn = LogincheckUtil.isUserLoggedIn();
+            retryCount++;
+            if (!isLoggedIn) {
+                System.err.println("登录失败，重试 " + retryCount + " / " + maxRetries);
+                // 等待一段时间再重试
+                Thread.sleep(5000);  // 等待5秒
+            }
+        }
         if (!isLoggedIn) {
             System.err.println("登录失败，终止爬虫.");
             return;
@@ -124,7 +133,7 @@ public class Application implements CommandLineRunner {
             Spider companyDetailSpider = Spider.create(companyDetailProcessor)
                     .addUrl(companyInfo.getCompanyWebsite())
                     .addPipeline(companyDetailPipeline)
-                    .thread(2);
+                    .thread(1);
             // 将 companyId 传递给 processor 和 pipeline
             companyDetailSpider.setUUID(companyInfo.getCompanyId().toString());
             companyDetailSpider.run();  // 使用 companyDetailSpider 实例运行爬虫

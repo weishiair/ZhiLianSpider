@@ -63,6 +63,6 @@ public class SeleniumDownloader implements Downloader {
 
     @Override
     public void setThread(int thread) {
-        // 此方法可以根据需要实现
+
     }
 }

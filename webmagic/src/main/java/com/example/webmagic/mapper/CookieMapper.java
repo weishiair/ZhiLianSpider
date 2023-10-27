@@ -23,4 +23,7 @@ public interface CookieMapper {
 
     @Select("SELECT * FROM cookies")
     List<Cookie> findAllCookies();
+
+    @Delete("DELETE FROM cookies")
+    void deleteAllCookies();
 }
