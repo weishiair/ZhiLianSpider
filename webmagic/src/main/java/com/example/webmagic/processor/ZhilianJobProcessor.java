@@ -27,17 +27,11 @@ import java.util.*;
 public class ZhilianJobProcessor implements PageProcessor {
 
     @Autowired
-    private WebDriverService webDriverService;
-    @Autowired
     private WebDriverProvider webDriverProvider;  // 注入 WebDriverProvider
     @Autowired
     private SliderHandler sliderHandler;  // 注入 SliderHandler
     private final DatabaseService databaseService;
-    @Autowired
-    private ApplicationEventPublisher eventPublisher;
 
-    @Autowired
-    private SearchConfig searchConfig;  // 注入 SearchConfig 类的实例
 
     private String city;
 

@@ -67,7 +67,7 @@ public class CookieTestTask {
         return listPageUrl;
     }
 
-    @Scheduled(cron = "0 56 16 * * ?")  // 每天上午11:00执行
+    @Scheduled(cron = "0 04 09 * * ?")  // 每天上午11:00执行
     public void runDailyJobCrawl() throws Exception {
         // 从 SearchConfig 中获取城市和关键字列表
         List<String> cities = searchConfig.getCities();
