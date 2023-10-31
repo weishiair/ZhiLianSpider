@@ -59,6 +59,9 @@ public class CompanyDetailProcessor implements PageProcessor {
             // 等待直到元素出现
             wait.until(ExpectedConditions.visibilityOfElementLocated(companyNameSelector));
 
+            int randomWaitTime = 1000 + random.nextInt(2000);  // 生成一个随机的等待时间，范围是1000到3000毫秒（1到3秒）
+            Thread.sleep(randomWaitTime);
+
             // 从WebDriver实例获取页面源代码
             System.out.println("Current URL: " + driver.getCurrentUrl());
             System.out.println("Current Title: " + driver.getTitle());

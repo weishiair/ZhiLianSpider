@@ -53,6 +53,9 @@ public class JobDetailProcessor implements PageProcessor {
 
             // 等待直到元素出现
             wait.until(ExpectedConditions.visibilityOfElementLocated(jobTitleSelector));
+            // 即使元素已经出现，也等待一个随机的时间
+            int randomWaitTime = 1000 + random.nextInt(2000);  // 生成一个随机的等待时间，范围是1000到3000毫秒（1到3秒）
+            Thread.sleep(randomWaitTime);
 
             // 从WebDriver实例获取页面源代码
             String pageSource = driver.getPageSource();

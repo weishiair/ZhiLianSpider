@@ -14,6 +14,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
@@ -32,38 +33,51 @@ public class ZhilianJobProcessor implements PageProcessor {
     @Autowired
     private SliderHandler sliderHandler;  // 注入 SliderHandler
     private final DatabaseService databaseService;
-
-    private final SearchConfig searchConfig;
-    private String city;
-    private String keyword;
-
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     @Autowired
-    public ZhilianJobProcessor(WebDriverProvider webDriverProvider, DatabaseService databaseService, SearchConfig searchConfig) {
-        this.webDriverProvider = webDriverProvider;  // 更新为 WebDriverProvider
-        this.databaseService = databaseService;
-        this.searchConfig = searchConfig;
+    private SearchConfig searchConfig;  // 注入 SearchConfig 类的实例
+
+    private String city;
+
+    private String keyword;
+
+    // 添加设置方法
+    public void setCity(String city) {
+        this.city = city;
     }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
+
+
+    //@Autowired
+    public ZhilianJobProcessor(WebDriverProvider webDriverProvider, DatabaseService databaseService) {
+        this.webDriverProvider = webDriverProvider;
+        this.databaseService = databaseService;
+    }
+
+
+
 
     private Site site = Site.me().setRetryTimes(3).setSleepTime(1000).setUserAgent(UserAgentUtils.randomUserAgent());
 
-
     @Override
     public void process(Page page) {
-        this.city = searchConfig.getCity();  // 设置city字段的值
-        this.keyword = searchConfig.getKeyword();  // 设置keyword字段的值
-        WebDriver driver = webDriverProvider.getWebDriver();
-        try {
-            processPage(page, driver, this.city, this.keyword);  // 传递城市和关键词字段
-        } finally {
-            //driver.quit();  // 确保在处理完成后关闭WebDriver实例
-        }
+        WebDriver driver = webDriverProvider.getWebDriver();  // 获取 WebDriver 实例
+        processPage(page, driver);  // 直接调用 processPage 方法，不需要循环
+
     }
 
-    public void processPage(Page page, WebDriver driver,String city, String keyword) {
+
+    public void processPage(Page page, WebDriver driver) {
         // 构建URL
         String url = String.format("https://sou.zhaopin.com/?jl=%s&kw=%s&p=1", city, keyword);
         System.out.println("Constructed URL: " + url);  // 打印构造的URL
+        driver.get(url);  // 使用新构建的URL访问网页
         try {
             Thread.sleep(5000);  // 等待5秒以确保页面加载完成
         } catch (InterruptedException e) {

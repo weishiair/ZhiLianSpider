@@ -1,25 +1,30 @@
 package com.example.webmagic.config;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
+@ConfigurationProperties(prefix = "search")
 public class SearchConfig {
-    private String city;
-    private String keyword;
 
-    public String getCity() {
-        return city;
+    private List<String> cities;
+    private List<String> keywords;
+
+    public List<String> getCities() {
+        return cities;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setCities(List<String> cities) {
+        this.cities = cities;
     }
 
-    public String getKeyword() {
-        return keyword;
+    public List<String> getKeywords() {
+        return keywords;
     }
 
-    public void setKeyword(String keyword) {
-        this.keyword = keyword;
+    public void setKeywords(List<String> keywords) {
+        this.keywords = keywords;
     }
 }

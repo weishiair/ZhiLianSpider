@@ -16,8 +16,16 @@ public class WebDriverProvider {
 
     private WebDriver webDriver;
 
-    @PostConstruct
-    public void init() {
+    public WebDriver getWebDriver() {
+        // 检查webDriver实例是否已经存在，如果不存在则创建它
+        if (webDriver == null) {
+            initWebDriver();
+        }
+        return webDriver;
+    }
+
+    private void initWebDriver() {
+        // 将原来init方法中的逻辑移动到这个私有方法中
         System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Google\\Chrome\\Application\\chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-blink-features=AutomationControlled");
@@ -26,10 +34,6 @@ public class WebDriverProvider {
         options.addArguments("--remote-allow-origins=*");
         webDriver = new ChromeDriver(options);
         System.out.println("WebDriver is initialized: " + (webDriver != null));
-    }
-
-    public WebDriver getWebDriver() {
-        return webDriver;
     }
 
     @PreDestroy
