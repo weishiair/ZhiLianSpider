@@ -3,6 +3,7 @@ package com.example.webmagic.processor;
 import com.example.webmagic.config.WebDriverProvider;
 import com.example.webmagic.service.WebDriverService;
 import com.example.webmagic.util.SliderHandler;
+import com.example.webmagic.util.UrlUtil;
 import com.example.webmagic.util.UserAgentUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -29,6 +30,9 @@ public class JobDetailProcessor implements PageProcessor {
 
     @Autowired
     private SliderHandler sliderHandler;  // 注入 SliderHandler
+    @Autowired
+    private UrlUtil urlUtil;  // 注入 UrlUtil
+
 
     private Site site = Site.me().setRetryTimes(3).setSleepTime(1000).setUserAgent(UserAgentUtils.randomUserAgent());
     ;
@@ -37,9 +41,12 @@ public class JobDetailProcessor implements PageProcessor {
 
     @Override
     public void process(Page page) {
+        // 使用 urlUtil 确保 URL 是 HTTPS
+        String httpsUrl = urlUtil.ensureHttps(page.getUrl().toString());
+
         WebDriver driver = webDriverProvider.getWebDriver();
         try {
-            driver.get(page.getUrl().toString());  // 使用driver字段
+            driver.get(httpsUrl);  // 使用处理过的 HTTPS URL
             boolean isSliderPresent = isSliderPresent(driver);
             if (isSliderPresent) {
                 sliderHandler.handleSlider(driver);  // 调用 SliderHandler 来处理滑块

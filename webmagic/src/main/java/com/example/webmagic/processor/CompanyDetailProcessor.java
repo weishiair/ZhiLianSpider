@@ -3,6 +3,7 @@ package com.example.webmagic.processor;
 import com.example.webmagic.config.WebDriverProvider;
 import com.example.webmagic.service.WebDriverService;
 import com.example.webmagic.util.SliderHandler;
+import com.example.webmagic.util.UrlUtil;
 import com.example.webmagic.util.UserAgentUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -29,6 +30,9 @@ public class CompanyDetailProcessor implements PageProcessor {
 
     @Autowired
     private SliderHandler sliderHandler;  // 注入 SliderHandler
+    @Autowired
+    private UrlUtil urlUtil;  // 注入 UrlUtil
+
 
     private Site site = Site.me().setRetryTimes(3).setSleepTime(1000).setUserAgent(UserAgentUtils.randomUserAgent());
 
@@ -36,14 +40,17 @@ public class CompanyDetailProcessor implements PageProcessor {
 
     @Override
     public void process(Page page) {
+        // 使用 urlUtil 确保 URL 是 HTTPS
+        String httpsUrl = urlUtil.ensureHttps(page.getUrl().toString());
+
         // 检查URL是否以 "http://company.zhaopin.com" 开头
-        if (!page.getUrl().toString().startsWith("http://company.zhaopin.com")) {
+        if (!page.getUrl().toString().startsWith("https://company.zhaopin.com")) {
             return;  // 如果不是，直接返回，跳过后续的解析逻辑
         }
 
         WebDriver driver = webDriverProvider.getWebDriver();
         try {
-            driver.get(page.getUrl().toString());  // 确保 WebDriver 导航到正确的页面
+            driver.get(httpsUrl);  // 使用处理过的 HTTPS URL
             boolean isSliderPresent = isSliderPresent(driver);
             if (isSliderPresent) {
                 sliderHandler.handleSlider(driver);  // 调用 SliderHandler 来处理滑块

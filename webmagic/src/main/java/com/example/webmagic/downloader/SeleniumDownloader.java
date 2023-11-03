@@ -49,9 +49,14 @@ public class SeleniumDownloader implements Downloader {
         }
 
         // 获取请求的网页内容
-        System.out.println("Requesting URL: " + request.getUrl());
-        driver.get(request.getUrl());  // 使用重用的WebDriver实例
-        System.out.println("Actual URL after redirection if any: " + driver.getCurrentUrl());
+        String url = request.getUrl();
+        // 检查URL是否以http:开头，如果是则替换为https:
+        if (url.startsWith("http:")) {
+            url = url.replace("http:", "https:");
+        }
+        System.out.println("Requesting URL: " + url);
+        driver.get(url);  // 使用重用的WebDriver实例获取更新后的URL
+
         Page page = new Page();
         page.setRawText(driver.getPageSource());
         page.setUrl(new PlainText(request.getUrl()));

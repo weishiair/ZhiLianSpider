@@ -27,7 +27,7 @@ public class RandomClicker implements Runnable {
             try {
                 // 计算随机点击的时间点（0到30分钟之间）
                 long randomTime = random.nextInt(30 * 60 * 1000);
-                System.out.println("Random click will be executed in " + (randomTime / 1000) + " seconds.");
+                System.out.println("随机点击将在 " + (randomTime / 1000) + " 秒后执行。");
 
                 // 等待随机时间
                 Thread.sleep(randomTime);
@@ -44,19 +44,19 @@ public class RandomClicker implements Runnable {
                     WebElement randomElement = clickableElements.get(random.nextInt(clickableElements.size()));
                     try {
                         randomElement.click();
-                        System.out.println("Random click executed.");  // 打印随机点击执行的消息
+                        System.out.println("随机点击开始执行");  // 打印随机点击执行的消息
                     } catch (Exception e) {
-                        System.err.println("Error during random click: " + e.getMessage());
+                        System.err.println("在点击期间出现错误: " + e.getMessage());
                     }
                 } else {
-                    System.err.println("No clickable elements found for random click.");
+                    System.err.println("随机点击未发现可以点击的元素.");
                 }
 
                 // 管理窗口
                 manageWindows(driver);
 
             } catch (InterruptedException e) {
-                System.err.println("Random clicker interrupted: " + e.getMessage());
+                System.err.println("随机点击中断: " + e.getMessage());
             }
         }
     }

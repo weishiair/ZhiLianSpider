@@ -15,6 +15,7 @@ import com.example.webmagic.service.DatabaseService;
 import com.example.webmagic.service.WebDriverService;
 import com.example.webmagic.util.LoginCheckUtil;
 import com.example.webmagic.util.LoginUtil;
+import com.example.webmagic.util.UrlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -60,6 +61,9 @@ public class CookieTestTask {
     private WebDriverService webDriverService;
     @Autowired
     private SearchConfig searchConfig;  // 注入 SearchConfig
+    @Autowired
+    private UrlUtil urlUtil;  // 将 UrlUtil 的自动装配移到类的顶部
+
 
     private static String listPageUrl;  // 添加这个字段来存储列表页面的URL
 
@@ -67,7 +71,7 @@ public class CookieTestTask {
         return listPageUrl;
     }
 
-    @Scheduled(cron = "0 04 09 * * ?")  // 每天上午11:00执行
+    @Scheduled(cron = "00 43 10 * * ?")  // 每天上午11:00执行
     public void runDailyJobCrawl() throws Exception {
         // 从 SearchConfig 中获取城市和关键字列表
         List<String> cities = searchConfig.getCities();
@@ -118,10 +122,12 @@ public class CookieTestTask {
                 // 获取需要爬取详情的工作列表
                 List<JobDetailInfo> jobInfos = databaseService.getJobsForDetailScraping();
                 for (JobDetailInfo jobInfo : jobInfos) {
+                    // 获取并确保工作详情 URL 是 HTTPS
+                    String jobDetailsUrl = urlUtil.ensureHttps(jobInfo.getJobDetails());  // 使用 urlUtil.ensureHttps
 
                     // 为每个工作创建并启动一个新的 Spider 实例
                     Spider detailSpider = Spider.create(jobDetailProcessor)
-                            .addUrl(jobInfo.getJobDetails())
+                            .addUrl(jobDetailsUrl)  // 使用新变量 jobDetailsUrl
                             .addPipeline(jobDetailPipeline)
                             .thread(2);
                     // 将 jobId 和 companyId 传递给 processor 和 pipeline
@@ -138,9 +144,12 @@ public class CookieTestTask {
                         System.err.println("Skipping company with ID " + companyInfo.getCompanyId() + " due to missing website URL.");
                         continue;  // 跳到循环的下一个迭代
                     }
+                    // 确保网址是HTTPS
+                    companyWebsite = urlUtil.ensureHttps(companyWebsite);  // 使用 urlUtil.ensureHttps
+
                     // 为每个公司创建并启动一个新的 Spider 实例
                     Spider companyDetailSpider = Spider.create(companyDetailProcessor)
-                            .addUrl(companyInfo.getCompanyWebsite())
+                            .addUrl(companyWebsite)  // 使用新变量 companyWebsite
                             .addPipeline(companyDetailPipeline)
                             .thread(1);
                     // 将 companyId 传递给 processor 和 pipeline
