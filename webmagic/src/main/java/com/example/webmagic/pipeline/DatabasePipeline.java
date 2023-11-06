@@ -32,11 +32,11 @@ public class DatabasePipeline implements Pipeline {
                     JobCompanyInfo jobCompanyInfo = (JobCompanyInfo) item;
                     databaseService.processEntry(jobCompanyInfo);
                 } else {
-                    System.err.println("Unexpected item type in list: " + item.getClass());
+                    System.err.println("列表中出现意外的项目类型: " + item.getClass());
                 }
             }
         } else {
-            System.err.println("Unexpected object type for jobCompanyInfo: " + jobCompanyInfoObject.getClass());
+            System.err.println("jobCompanyInfo 的对象类型异常: " + jobCompanyInfoObject.getClass());
         }
     }
 }

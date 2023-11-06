@@ -21,7 +21,7 @@ public class CompanyDetailPipeline implements Pipeline {
 
     @Override
     public void process(ResultItems resultItems, Task task) {
-        System.out.println("Entering process method in CompanyDetailPipeline.");
+        System.out.println("进入CompanyDetailPipeline流程.");
 
         // 从 Spider 对象获取 companyId
         String[] ids = task.getUUID().split("-");
@@ -55,7 +55,7 @@ public class CompanyDetailPipeline implements Pipeline {
 
         );
 
-        System.out.println("Exiting process method in CompanyDetailPipeline.");
+        System.out.println("退出CompanyDetailPipeline流程.");
     }
 
 }

@@ -1,7 +1,6 @@
 package com.example.webmagic.processor;
 
 import com.example.webmagic.config.WebDriverProvider;
-import com.example.webmagic.service.WebDriverService;
 import com.example.webmagic.util.SliderHandler;
 import com.example.webmagic.util.UrlUtil;
 import com.example.webmagic.util.UserAgentUtils;
@@ -21,7 +20,6 @@ import us.codecraft.webmagic.processor.PageProcessor;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Random;
 
 @Component

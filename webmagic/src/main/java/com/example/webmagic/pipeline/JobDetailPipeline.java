@@ -15,7 +15,7 @@ public class JobDetailPipeline implements Pipeline {
 
     @Override
     public void process(ResultItems resultItems, Task task) {
-        System.out.println("Entering process method in JobDetailPipeline.");
+        System.out.println("进入JobDetailPipeline进程.");
 
         // 从 Spider 对象获取 jobId 和 companyId
         String[] ids = task.getUUID().split("-");
@@ -30,6 +30,6 @@ public class JobDetailPipeline implements Pipeline {
         // 更新数据库
         databaseService.updateJobAndCompanyInfo(jobId, jobLocation, jobDescription, companyId, companyWebsite);
 
-        System.out.println("Exiting process method in JobDetailPipeline.");
+        System.out.println("退出JobDetailPipeline进程.");
     }
 }
