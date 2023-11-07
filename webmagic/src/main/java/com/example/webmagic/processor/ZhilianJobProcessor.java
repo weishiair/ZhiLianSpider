@@ -15,12 +15,16 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
 import us.codecraft.webmagic.selector.Html;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Component
@@ -47,7 +51,6 @@ public class ZhilianJobProcessor implements PageProcessor {
     }
 
 
-
     //@Autowired
     public ZhilianJobProcessor(WebDriverProvider webDriverProvider, DatabaseService databaseService) {
         this.webDriverProvider = webDriverProvider;
@@ -55,21 +58,26 @@ public class ZhilianJobProcessor implements PageProcessor {
     }
 
 
-
-
     private Site site = Site.me().setRetryTimes(3).setSleepTime(1000).setUserAgent(UserAgentUtils.randomUserAgent());
 
     @Override
     public void process(Page page) {
         WebDriver driver = webDriverProvider.getWebDriver();  // 获取 WebDriver 实例
-        processPage(page, driver);  // 直接调用 processPage 方法，不需要循环
+        try {
+            processPage(page, driver);  // 直接调用 processPage 方法，不需要循环
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
 
-    public void processPage(Page page, WebDriver driver) {
+    public void processPage(Page page, WebDriver driver) throws UnsupportedEncodingException {
         // 构建URL
-        String url = String.format("https://sou.zhaopin.com/?jl=%s&kw=%s&p=1", city, keyword);
+
+        String encodedCity = URLEncoder.encode(city, StandardCharsets.UTF_8.toString());
+        String encodedKeyword = URLEncoder.encode(keyword, StandardCharsets.UTF_8.toString());
+        String url = String.format("https://sou.zhaopin.com/?jl=%s&kw=%s&p=1", encodedCity, encodedKeyword);
         System.out.println("Constructed URL: " + url);  // 打印构造的URL
         driver.get(url);  // 使用新构建的URL访问网页
         try {

@@ -24,7 +24,7 @@ public class SeleniumDownloader implements Downloader {
         this.loginUtil = loginUtil;
         this.checkLoginUtil = checkLoginUtil;
         this.webDriverProvider = webDriverProvider;  // 更新为 WebDriverProvider
-        System.out.println("SeleniumDownloader constructor called");
+        System.out.println("调用 SeleniumDownloader 构造函数");
     }
 
     @Override
@@ -35,7 +35,7 @@ public class SeleniumDownloader implements Downloader {
 
         // 检查WebDriverProvider是否为空
         if (webDriverProvider == null) {
-            System.err.println("webDriverProvider is null!");  // 更新错误消息
+            System.err.println("webDriverProvider为空!");  // 更新错误消息
             return null;  // 或抛出一个异常
         }
 
@@ -44,7 +44,7 @@ public class SeleniumDownloader implements Downloader {
 
         // 检查WebDriver是否为空
         if (driver == null) {
-            System.err.println("WebDriver is null!");
+            System.err.println("WebDriver为空!");
             return null;  // 或抛出一个异常
         }
 

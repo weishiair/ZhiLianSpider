@@ -32,30 +32,30 @@ public class WebDriverService {
      */
     public void applyCookies() {
         WebDriver webDriver = webDriverProvider.getWebDriver();  // 从 WebDriverProvider 获取 WebDriver 实例
-        System.out.println("Entering applyCookies method");
+        System.out.println("正在进入 applyCookies 方法");
 
         // 首先，导航到正确的域，以便你可以设置cookies
         webDriver.navigate().to("https://passport.zhaopin.com");
-        System.out.println("Navigated to https://passport.zhaopin.com for the first time");
+        System.out.println("首次导航到https://passport.zhaopin.com");
 
         // 检查当前的URL，并在必要时导航到正确的域
         String currentUrl = webDriver.getCurrentUrl();
         if (!currentUrl.contains("i.zhaopin.com")) {
             webDriver.navigate().to("https://i.zhaopin.com");
-            System.out.println("Navigated to https://i.zhaopin.com: " + webDriver.getCurrentUrl());
+            System.out.println("导航到https://i.zhaopin.com: " + webDriver.getCurrentUrl());
         }
 
         // 从数据库中获取 cookies
         List<com.example.webmagic.domain.Cookie> cookies = cookieService.getAllCookies();  // 假设您的CookieService有一个方法来获取所有的cookies
 
         if (cookies.isEmpty()) {
-            System.err.println("No cookies found in database, attempting to login...");
+            System.err.println("数据库中未找到Cookie，正在尝试登录...");
             loginUtil.loginIfNecessary();  // 修改这里
             // 重新从数据库获取 cookies，因为 loginIfNecessary 方法可能已经保存了新的 cookies
             cookies = cookieService.getAllCookies();
             if (cookies.isEmpty()) {
                 // 如果仍然没有 cookies，可能需要处理这种情况，例如通过抛出异常或记录错误
-                System.err.println("Still no cookies found after login attempt, terminating applyCookies method.");
+                System.err.println("登录尝试后仍未找到 Cookie，正在终止 applyCookies 方法。");
                 return;
             }
         }
@@ -81,15 +81,15 @@ public class WebDriverService {
                 e.printStackTrace();  // 或者你可以选择其他方式来处理这个异常
             }
 
-            System.out.println("Current URL after adding cookie: " + webDriver.getCurrentUrl());
+            System.out.println("添加cookie后的当前网址： " + webDriver.getCurrentUrl());
         }
         // 在循环结束后尝试刷新页面
         webDriver.navigate().refresh();
-        System.out.println("Refreshed the page: " + webDriver.getCurrentUrl());
+        System.out.println("刷新页面: " + webDriver.getCurrentUrl());
 
         // 或者尝试导航到你想要的 URL
         webDriver.navigate().to("https://i.zhaopin.com");
-        System.out.println("Navigated to https://i.zhaopin.com: " + webDriver.getCurrentUrl());
+        System.out.println("导航至https://i.zhaopin.com: " + webDriver.getCurrentUrl());
 
 
         try {
@@ -102,7 +102,7 @@ public class WebDriverService {
         // 检查当前的URL
         if (currentUrl.startsWith("https://i.zhaopin.com")) {
             // 如果在i.zhaopin.com，就不再导航了
-            System.out.println("Already at i.zhaopin.com, no further navigation needed.");
+            System.out.println("已在i.zhaopin.com,不需要进一步导航.");
             return;
         }
     }

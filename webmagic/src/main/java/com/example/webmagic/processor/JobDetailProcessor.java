@@ -87,47 +87,12 @@ public class JobDetailProcessor implements PageProcessor {
         }
     }
 
-
-    /*@Override
-    public void process(Page page) {
-        WebDriver driver =webDriverProvider.getWebDriver();
-        try {
-            driver.get(page.getUrl().toString());  // 使用driver字段
-            boolean isSliderPresent = isSliderPresent(driver);
-            if (isSliderPresent) {
-                sliderHandler.handleSlider(driver);  // 调用 SliderHandler 来处理滑块
-            }
-            int sleepTime = 2000 + random.nextInt(5000);  // 生成一个随机的等待时间，范围是2000到7000毫秒
-            Thread.sleep(sleepTime);  // 暂停执行
-
-            // 从WebDriver实例获取页面源代码
-            String pageSource = driver.getPageSource();
-            Html html = new Html(pageSource);
-
-            // 提取工作地点
-            String jobLocation = html.xpath("//div[@class='job-address__content']/span[@class='job-address__content-text']/text()").get();
-            // 提取职位描述
-            List<String> descriptionParts = html.xpath("//div[@class='describtion__detail-content']//text() | //div[@class='describtion__detail-content']/div//text() | //div[@class='describtion__detail-content']/p//text()").all();
-            String jobDescription = String.join("\n", descriptionParts);
-            // 提取公司主页地址
-            String companyWebsite = html.xpath("//a[@class='company__page-site']/@href").get();
-
-            // 将提取的数据存入Page对象，以便传递给Pipeline
-            page.putField("jobLocation", jobLocation);
-            page.putField("jobDescription", jobDescription);
-            page.putField("companyWebsite", companyWebsite);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
     public boolean isSliderPresent(WebDriver driver) {
         // 使用 findElements 方法查找元素
         List<WebElement> sliders = driver.findElements(By.id("nc_1_nocaptcha"));
         // 检查返回的列表是否为空
         return !sliders.isEmpty();
     }
-
 
 
     @Override

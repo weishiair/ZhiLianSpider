@@ -17,6 +17,7 @@ import com.example.webmagic.util.LoginCheckUtil;
 import com.example.webmagic.util.LoginUtil;
 import com.example.webmagic.util.UrlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Spider;
@@ -71,7 +72,7 @@ public class CookieTestTask {
         return listPageUrl;
     }
 
-    @Scheduled(cron = "00 23 14 * * ?")  // 每天上午11:00执行
+    @Scheduled(cron = "00 42 17 * * ?")  // 每天上午11:00执行
     public void runDailyJobCrawl() throws Exception {
         // 从 SearchConfig 中获取城市和关键字列表
         List<String> cities = searchConfig.getCities();
