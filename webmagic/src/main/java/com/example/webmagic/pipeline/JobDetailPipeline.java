@@ -26,9 +26,10 @@ public class JobDetailPipeline implements Pipeline {
         String jobLocation = resultItems.get("jobLocation");
         String jobDescription = resultItems.get("jobDescription");
         String companyWebsite = resultItems.get("companyWebsite");
+        String labels = resultItems.get("labels");
 
         // 更新数据库
-        databaseService.updateJobAndCompanyInfo(jobId, jobLocation, jobDescription, companyId, companyWebsite);
+        databaseService.updateJobAndCompanyInfo(jobId, jobLocation, jobDescription, companyId, companyWebsite,labels);
 
         System.out.println("退出JobDetailPipeline进程.");
     }

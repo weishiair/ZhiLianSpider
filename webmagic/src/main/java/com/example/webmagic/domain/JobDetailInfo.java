@@ -5,6 +5,16 @@ public class JobDetailInfo {
     private Integer companyId;
     private String jobDetails;
 
+    private String labels;
+
+    public String getLabels() {
+        return labels;
+    }
+
+    public void setLabels(String labels) {
+        this.labels = labels;
+    }
+
     public Integer getJobId() {
         return jobId;
     }

@@ -67,17 +67,16 @@ public class DatabaseService {
     }
 
     @Transactional
-    public void updateJobAndCompanyInfo(Integer jobId, String jobLocation, String jobDescription, Integer companyId, String companyWebsite) {
-        System.out.println("Entering updateJobAndCompanyInfo method.");
-        if (jobLocation != null || jobDescription != null) {
-            jobInfoMapper.updateJobInfo(jobId, jobLocation, jobDescription);
+    public void updateJobAndCompanyInfo(Integer jobId, String jobLocation, String jobDescription, Integer companyId, String companyWebsite, String labels) {
+        System.out.println("进入 updateJobAndCompanyInfo 方法。");
+        if (jobLocation != null || jobDescription != null || labels != null) {
+            jobInfoMapper.updateJobInfo(jobId, jobLocation, jobDescription, labels);
         }
         if (companyWebsite != null) {
             companyInfoMapper.updateCompanyWebsite(companyId, companyWebsite);
         }
-        System.out.println("Exiting updateJobAndCompanyInfo method.");
+        System.out.println("退出 updateJobAndCompanyInfo 方法。");
     }
-
 
     @Transactional
     public void processEntry(JobCompanyInfo jobCompanyInfo) {

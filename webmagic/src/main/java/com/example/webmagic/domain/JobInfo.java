@@ -38,10 +38,18 @@ public class JobInfo implements Serializable {
      */
     private String experience;
 
+    public String getLabels() {
+        return labels;
+    }
+
+    public void setLabels(String labels) {
+        this.labels = labels;
+    }
+
     /**
      * 标签
      */
-    private String tags;
+    private String labels;
 
     /**
      * 最后更新时间
@@ -182,20 +190,6 @@ public class JobInfo implements Serializable {
      */
     public void setExperience(String experience) {
         this.experience = experience;
-    }
-
-    /**
-     * 标签
-     */
-    public String getTags() {
-        return tags;
-    }
-
-    /**
-     * 标签
-     */
-    public void setTags(String tags) {
-        this.tags = tags;
     }
 
     /**
@@ -364,7 +358,7 @@ public class JobInfo implements Serializable {
         sb.append(", salary=").append(salary);
         sb.append(", city=").append(city);
         sb.append(", experience=").append(experience);
-        sb.append(", tags=").append(tags);
+        sb.append(", labels=").append(labels);
         sb.append(", lastUpdateTime=").append(lastUpdateTime);
         sb.append(", searchKeywords=").append(searchKeywords);
         sb.append(", jobDescription=").append(jobDescription);

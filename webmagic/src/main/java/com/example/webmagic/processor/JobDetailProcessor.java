@@ -76,11 +76,15 @@ public class JobDetailProcessor implements PageProcessor {
             String jobDescription = String.join("\n", descriptionParts);
             // 提取公司主页地址
             String companyWebsite = html.xpath("//a[@class='company__page-site']/@href").get();
+            // 提取标签
+            List<String> labels = html.xpath("//div[@class='describtion__skills-content']/span[@class='describtion__skills-item']/text()").all();
+            String jobLabel = String.join(", ", labels);  // 将提取到的标签用逗号分隔合并为一个字符串
 
             // 将提取的数据存入Page对象，以便传递给Pipeline
             page.putField("jobLocation", jobLocation);
             page.putField("jobDescription", jobDescription);
             page.putField("companyWebsite", companyWebsite);
+            page.putField("labels", jobLabel);
 
         } catch (Exception e) {
             e.printStackTrace();
