@@ -4,6 +4,7 @@ import com.example.webmagic.config.SearchConfig;
 import com.example.webmagic.config.WebDriverProvider;
 import com.example.webmagic.domain.CompanyDetailInfo;
 import com.example.webmagic.domain.JobDetailInfo;
+import com.example.webmagic.domain.UserConfig;
 import com.example.webmagic.downloader.SeleniumDownloader;
 import com.example.webmagic.pipeline.CompanyDetailPipeline;
 import com.example.webmagic.pipeline.DatabasePipeline;
@@ -12,6 +13,7 @@ import com.example.webmagic.processor.CompanyDetailProcessor;
 import com.example.webmagic.processor.JobDetailProcessor;
 import com.example.webmagic.processor.ZhilianJobProcessor;
 import com.example.webmagic.service.DatabaseService;
+import com.example.webmagic.service.UserConfigService;
 import com.example.webmagic.service.WebDriverService;
 import com.example.webmagic.util.LoginCheckUtil;
 import com.example.webmagic.util.LoginUtil;
@@ -64,6 +66,8 @@ public class CookieTestTask {
     private SearchConfig searchConfig;  // 注入 SearchConfig
     @Autowired
     private UrlUtil urlUtil;  // 将 UrlUtil 的自动装配移到类的顶部
+    @Autowired
+    private UserConfigService userConfigService;
 
 
     private static String listPageUrl;  // 添加这个字段来存储列表页面的URL
@@ -72,12 +76,8 @@ public class CookieTestTask {
         return listPageUrl;
     }
 
-    @Scheduled(cron = "00 35 11 * * ?")  // 每天上午11:00执行
+    @Scheduled(cron = "00 34 10 * * ?")  // 每天上午11:00执行
     public void runDailyJobCrawl() throws Exception {
-        // 从 SearchConfig 中获取城市和关键字列表
-        List<String> cities = searchConfig.getCities();
-        List<String> keywords = searchConfig.getKeywords();
-
         // 尝试应用之前保存的 cookies
         webDriverService.applyCookies();
 
@@ -98,12 +98,14 @@ public class CookieTestTask {
             System.err.println("登录失败，终止爬虫.");
             return;
         }
+        List<UserConfig> activeConfigs = userConfigService.listActiveConfigs();
 
         // 处理所有城市和关键字的组合
-        for (String city : cities) {
-            for (String keyword : keywords) {
-                zhilianJobProcessor.setCity(city);
-                zhilianJobProcessor.setKeyword(keyword);
+        for (UserConfig config : activeConfigs) {
+            String city = config.getCity();
+            String keyword = config.getKeyword();
+            zhilianJobProcessor.setCity(city);
+            zhilianJobProcessor.setKeyword(keyword);
                 System.out.println("Current City: " + city + ", Current Keyword: " + keyword);
 
                 // 创建并启动主爬虫任务
@@ -162,4 +164,3 @@ public class CookieTestTask {
         }
         //webDriverProvider.destroy();  // 确保在完成所有任务后销毁 WebDriver 实例
     }
-}
