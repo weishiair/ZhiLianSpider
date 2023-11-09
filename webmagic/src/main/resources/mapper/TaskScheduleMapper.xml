@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.webmagic.mapper.TaskScheduleMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.webmagic.domain.TaskSchedule">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="scheduleName" column="schedule_name" jdbcType="VARCHAR"/>
+            <result property="cronExpression" column="cron_expression" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="VARCHAR"/>
+            <result property="lastRunTime" column="last_run_time" jdbcType="TIMESTAMP"/>
+            <result property="nextRunTime" column="next_run_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,schedule_name,cron_expression,
+        status,last_run_time,next_run_time
+    </sql>
+</mapper>

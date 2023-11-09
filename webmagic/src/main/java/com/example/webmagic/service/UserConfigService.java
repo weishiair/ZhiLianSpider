@@ -13,4 +13,8 @@ import java.util.List;
 public interface UserConfigService extends IService<UserConfig> {
 
     List<UserConfig> listActiveConfigs();
+    boolean addTaskScheduleToUserConfig(Integer userConfigId, Integer taskScheduleId);
+
+    boolean removeTaskScheduleFromUserConfig(Integer userConfigId, Integer taskScheduleId);
 }
+

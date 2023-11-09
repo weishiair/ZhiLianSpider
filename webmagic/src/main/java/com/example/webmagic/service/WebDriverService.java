@@ -72,7 +72,7 @@ public class WebDriverService {
                     .build();
 
             webDriver.manage().addCookie(seleniumCookie);
-            System.out.println("Added cookie: " + seleniumCookie);
+            System.out.println("添加cookie: " + seleniumCookie);
 
             // 等待一段时间，以便网站有机会处理cookies并可能执行重定向
             try {

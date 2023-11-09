@@ -63,8 +63,6 @@ public class CookieTestTask {
     @Autowired
     private WebDriverService webDriverService;
     @Autowired
-    private SearchConfig searchConfig;  // 注入 SearchConfig
-    @Autowired
     private UrlUtil urlUtil;  // 将 UrlUtil 的自动装配移到类的顶部
     @Autowired
     private UserConfigService userConfigService;
@@ -76,22 +74,27 @@ public class CookieTestTask {
         return listPageUrl;
     }
 
-    @Scheduled(cron = "00 34 10 * * ?")  // 每天上午11:00执行
+
+    // 定时任务的入口点
+    @Scheduled(cron = "00 34 10 * * ?")
     public void runDailyJobCrawl() throws Exception {
-        // 尝试应用之前保存的 cookies
+        executeCrawl(); // 定时调用新的方法
+    }
+
+    // 实际执行爬虫的方法
+    public void executeCrawl() throws Exception {
         webDriverService.applyCookies();
 
         boolean isLoggedIn = LogincheckUtil.isUserLoggedIn();
         int retryCount = 0;
-        int maxRetries = 3;  // 设置最大重试次数，例如3次
+        int maxRetries = 3;
         while (!isLoggedIn && retryCount < maxRetries) {
             loginUtil.loginIfNecessary();
             isLoggedIn = LogincheckUtil.isUserLoggedIn();
             retryCount++;
             if (!isLoggedIn) {
                 System.err.println("登录失败，重试 " + retryCount + " / " + maxRetries);
-                // 等待一段时间再重试
-                Thread.sleep(5000);  // 等待5秒
+                Thread.sleep(5000);
             }
         }
         if (!isLoggedIn) {
@@ -100,67 +103,52 @@ public class CookieTestTask {
         }
         List<UserConfig> activeConfigs = userConfigService.listActiveConfigs();
 
-        // 处理所有城市和关键字的组合
         for (UserConfig config : activeConfigs) {
             String city = config.getCity();
             String keyword = config.getKeyword();
             zhilianJobProcessor.setCity(city);
             zhilianJobProcessor.setKeyword(keyword);
-                System.out.println("Current City: " + city + ", Current Keyword: " + keyword);
+            System.out.println("现在的城市是: " + city + ", 现在的关键词是: " + keyword);
 
-                // 创建并启动主爬虫任务
-                Spider spider = Spider.create(zhilianJobProcessor)
-                        .addUrl(String.format("https://sou.zhaopin.com/?jl=%s&kw=%s&p=1", city, keyword))
+            Spider spider = Spider.create(zhilianJobProcessor)
+                    .addUrl(String.format("https://sou.zhaopin.com/?jl=%s&kw=%s&p=1", city, keyword))
+                    .setDownloader(new SeleniumDownloader(loginUtil, LogincheckUtil, webDriverProvider))
+                    .addPipeline(databasePipeline)
+                    .setScheduler(new QueueScheduler()
+                            .setDuplicateRemover(new BloomFilterDuplicateRemover(10000000)))
+                    .thread(1);
+            spider.run();
+            listPageUrl = String.format("https://sou.zhaopin.com/?jl=%s&kw=%s&p=1", city, keyword);
 
-                        .setDownloader(new SeleniumDownloader(loginUtil, LogincheckUtil, webDriverProvider))  // 更新为 webDriverProvider
-                        .addPipeline(databasePipeline)
-                        .setScheduler(new QueueScheduler()
-                                .setDuplicateRemover(new BloomFilterDuplicateRemover(10000000)))  // 10000000是预期的URL数量
+            List<JobDetailInfo> jobInfos = databaseService.getJobsForDetailScraping();
+            for (JobDetailInfo jobInfo : jobInfos) {
+                String jobDetailsUrl = urlUtil.ensureHttps(jobInfo.getJobDetails());
+
+                Spider detailSpider = Spider.create(jobDetailProcessor)
+                        .addUrl(jobDetailsUrl)
+                        .addPipeline(jobDetailPipeline)
+                        .thread(2);
+                detailSpider.setUUID(jobInfo.getJobId().toString() + "-" + jobInfo.getCompanyId().toString());
+                detailSpider.run();
+            }
+
+            List<CompanyDetailInfo> companyInfos = databaseService.getCompaniesForDetailScraping();
+            for (CompanyDetailInfo companyInfo : companyInfos) {
+                String companyWebsite = companyInfo.getCompanyWebsite();
+                if (companyWebsite == null || companyWebsite.isEmpty()) {
+                    System.err.println("跳过id为" + companyInfo.getCompanyId() + " 的公司，因为url丢失.");
+                    continue;
+                }
+                companyWebsite = urlUtil.ensureHttps(companyWebsite);
+
+                Spider companyDetailSpider = Spider.create(companyDetailProcessor)
+                        .addUrl(companyWebsite)
+                        .addPipeline(companyDetailPipeline)
                         .thread(1);
-
-                // 启动爬虫
-                spider.run();
-                listPageUrl = String.format("https://sou.zhaopin.com/?jl=%s&kw=%s&p=1", city, keyword);
-
-                // 获取需要爬取详情的工作列表
-                List<JobDetailInfo> jobInfos = databaseService.getJobsForDetailScraping();
-                for (JobDetailInfo jobInfo : jobInfos) {
-                    // 获取并确保工作详情 URL 是 HTTPS
-                    String jobDetailsUrl = urlUtil.ensureHttps(jobInfo.getJobDetails());  // 使用 urlUtil.ensureHttps
-
-                    // 为每个工作创建并启动一个新的 Spider 实例
-                    Spider detailSpider = Spider.create(jobDetailProcessor)
-                            .addUrl(jobDetailsUrl)  // 使用新变量 jobDetailsUrl
-                            .addPipeline(jobDetailPipeline)
-                            .thread(2);
-                    // 将 jobId 和 companyId 传递给 processor 和 pipeline
-                    detailSpider.setUUID(jobInfo.getJobId().toString() + "-" + jobInfo.getCompanyId().toString());
-                    detailSpider.run();  // 使用 detailSpider 实例运行爬虫
-                }
-
-                // 获取需要爬取详情的公司列表
-                List<CompanyDetailInfo> companyInfos = databaseService.getCompaniesForDetailScraping();
-                for (CompanyDetailInfo companyInfo : companyInfos) {
-                    String companyWebsite = companyInfo.getCompanyWebsite();
-                    if (companyWebsite == null || companyWebsite.isEmpty()) {
-                        // 此公司的网站URL为空，跳过处理
-                        System.err.println("Skipping company with ID " + companyInfo.getCompanyId() + " due to missing website URL.");
-                        continue;  // 跳到循环的下一个迭代
-                    }
-                    // 确保网址是HTTPS
-                    companyWebsite = urlUtil.ensureHttps(companyWebsite);  // 使用 urlUtil.ensureHttps
-
-                    // 为每个公司创建并启动一个新的 Spider 实例
-                    Spider companyDetailSpider = Spider.create(companyDetailProcessor)
-                            .addUrl(companyWebsite)  // 使用新变量 companyWebsite
-                            .addPipeline(companyDetailPipeline)
-                            .thread(1);
-                    // 将 companyId 传递给 processor 和 pipeline
-                    companyDetailSpider.setUUID(companyInfo.getCompanyId().toString());
-                    companyDetailSpider.run();  // 使用 companyDetailSpider 实例运行爬虫
-                }
-
+                companyDetailSpider.setUUID(companyInfo.getCompanyId().toString());
+                companyDetailSpider.run();
             }
         }
         //webDriverProvider.destroy();  // 确保在完成所有任务后销毁 WebDriver 实例
+    }
     }

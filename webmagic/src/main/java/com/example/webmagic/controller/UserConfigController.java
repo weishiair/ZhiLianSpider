@@ -1,58 +1,82 @@
 package com.example.webmagic.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.webmagic.domain.UserConfig;
+import com.example.webmagic.service.TaskScheduleService;
 import com.example.webmagic.service.UserConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 @RestController
-@RequestMapping("/user-config")
+@RequestMapping("/userconfig")
 public class UserConfigController {
 
     private final UserConfigService userConfigService;
+    private final TaskScheduleService taskScheduleService;
 
     @Autowired
-    public UserConfigController(UserConfigService userConfigService) {
+    public UserConfigController(UserConfigService userConfigService, TaskScheduleService taskScheduleService) {
         this.userConfigService = userConfigService;
+        this.taskScheduleService = taskScheduleService;
     }
-
     // 创建用户配置
     @PostMapping("/")
     public boolean createUserConfig(@RequestBody UserConfig userConfig) {
-        // 这里可以添加创建前的逻辑检查
         return userConfigService.save(userConfig);
     }
 
-    // 删除用户配置
+    // 删除用户配置（软删除）
     @DeleteMapping("/{id}")
     public boolean deleteUserConfig(@PathVariable("id") Long id) {
-        // 这里可以添加删除前的逻辑检查
-        return userConfigService.removeById(id);
+        UserConfig userConfig = userConfigService.getById(id);
+        if (userConfig != null) {
+            userConfig.setDeleteFlag("Y");
+            return userConfigService.updateById(userConfig);
+        }
+        return false;
     }
 
     // 更新用户配置
     @PutMapping("/")
     public boolean updateUserConfig(@RequestBody UserConfig userConfig) {
-        // 这里可以添加更新前的逻辑检查
         return userConfigService.updateById(userConfig);
     }
 
     // 根据ID获取用户配置
     @GetMapping("/{id}")
     public UserConfig getUserConfig(@PathVariable("id") Long id) {
-        // 这里可以添加获取前的逻辑检查
         return userConfigService.getById(id);
     }
 
     // 分页查询用户配置
     @GetMapping("/page")
-    public IPage<UserConfig> getUserConfigPage(@RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
-                                               @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
-        // 创建分页构造器
+    public IPage<UserConfig> getUserConfigPage(
+            @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo,
+            @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize
+    ) {
         Page<UserConfig> page = new Page<>(pageNo, pageSize);
-        // 调用service层的分页查询方法
-        return userConfigService.page(page);
+        QueryWrapper<UserConfig> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("delete_flag", "N");
+        return userConfigService.page(page, queryWrapper);
+    }
+    // 添加用户配置与任务计划的关联
+    @PostMapping("/{userConfigId}/task-schedules/{taskScheduleId}")
+    public ResponseEntity<?> addUserConfigTaskSchedule(
+            @PathVariable Integer userConfigId,
+            @PathVariable Integer taskScheduleId) {
+        boolean isSuccess = userConfigService.addTaskScheduleToUserConfig(userConfigId, taskScheduleId);
+        return isSuccess ? ResponseEntity.ok().build() : ResponseEntity.badRequest().body("Failed to add task schedule to user config.");
+    }
+
+    // 删除用户配置与任务计划的关联
+    @DeleteMapping("/{userConfigId}/task-schedules/{taskScheduleId}")
+    public ResponseEntity<?> removeUserConfigTaskSchedule(
+            @PathVariable Integer userConfigId,
+            @PathVariable Integer taskScheduleId) {
+        boolean isSuccess = userConfigService.removeTaskScheduleFromUserConfig(userConfigId, taskScheduleId);
+        return isSuccess ? ResponseEntity.ok().build() : ResponseEntity.badRequest().body("Failed to remove task schedule from user config.");
     }
 }

@@ -143,7 +143,7 @@ public class DatabaseService {
         // 调用 Mapper 方法来更新数据库
         companyInfoMapper.updateCompanyDetails(companyInfo);
 
-        System.out.println("Exiting updateCompanyDetails method.");
+        System.out.println("退出updateCompanyDetails方法.");
     }
 
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.webmagic.mapper.UserConfigScheduleMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.webmagic.domain.UserConfigSchedule">
+            <id property="userConfigId" column="user_config_id" jdbcType="INTEGER"/>
+            <id property="taskScheduleId" column="task_schedule_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        user_config_id,task_schedule_id
+    </sql>
+</mapper>

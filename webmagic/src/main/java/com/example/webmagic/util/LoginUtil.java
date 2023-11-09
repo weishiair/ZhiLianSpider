@@ -31,7 +31,7 @@ public class LoginUtil {
         // 检查登录状态
         boolean isLoggedIn = loginCheckUtil.isUserLoggedIn();
         if (isLoggedIn) {
-            System.out.println("User is already logged in.");
+            System.out.println("用户已登录.");
             return;
         }
 
