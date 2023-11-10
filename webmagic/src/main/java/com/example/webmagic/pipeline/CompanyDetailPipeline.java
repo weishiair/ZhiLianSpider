@@ -18,7 +18,6 @@ public class CompanyDetailPipeline implements Pipeline {
     @Autowired
     private DatabaseService databaseService;
 
-
     @Override
     public void process(ResultItems resultItems, Task task) {
         System.out.println("进入CompanyDetailPipeline流程.");
@@ -28,11 +27,11 @@ public class CompanyDetailPipeline implements Pipeline {
         Integer companyId = Integer.parseInt(ids[0]);
 
         // 从 ResultItems 获取公司详情数据
-        String establishmentDateStr = resultItems.get("establishmentDateStr");
-        String registeredCapital = resultItems.get("registeredCapital");
-        String legalRepresentative = resultItems.get("legalRepresentative");
-        String companyAddress = resultItems.get("companyAddress");
-        String companyIntroduce = resultItems.get("companyIntroduce");
+        String establishmentDateStr = cleanString(resultItems.get("establishmentDateStr"));
+        String registeredCapital = cleanString(resultItems.get("registeredCapital"));
+        String legalRepresentative = cleanString(resultItems.get("legalRepresentative"));
+        String companyAddress = cleanString(resultItems.get("companyAddress"));
+        String companyIntroduce = cleanString(resultItems.get("companyIntroduce"));
 
         // 检查成立时间字符串是否为空或null，然后尝试解析它
         Date establishmentDate = null;
@@ -40,6 +39,7 @@ public class CompanyDetailPipeline implements Pipeline {
             try {
                 establishmentDate = new SimpleDateFormat("yyyy-MM-dd").parse(establishmentDateStr);
             } catch (ParseException e) {
+                System.err.println("成立时间字符串解析失败: " + establishmentDateStr);
                 e.printStackTrace();  // 打印解析异常
             }
         }
@@ -52,10 +52,19 @@ public class CompanyDetailPipeline implements Pipeline {
                 legalRepresentative,
                 companyAddress,
                 companyIntroduce
-
         );
 
         System.out.println("退出CompanyDetailPipeline流程.");
     }
 
+    private String cleanString(String str) {
+        if (str == null) {
+            return null;
+        }
+        // 去除字符串两端的空白字符
+        str = str.trim();
+        // 替换字符串中的连续多个空白字符为一个空格
+        str = str.replaceAll("\\s+", " ");
+        return str;
+    }
 }

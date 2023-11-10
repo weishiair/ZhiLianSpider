@@ -22,15 +22,26 @@ public class JobDetailPipeline implements Pipeline {
         Integer jobId = Integer.parseInt(ids[0]);
         Integer companyId = Integer.parseInt(ids[1]);
 
-        // 从 ResultItems 获取 jobLocation, jobDescription, companyWebsite
-        String jobLocation = resultItems.get("jobLocation");
-        String jobDescription = resultItems.get("jobDescription");
-        String companyWebsite = resultItems.get("companyWebsite");
-        String labels = resultItems.get("labels");
+        // 从 ResultItems 获取 jobLocation, jobDescription, companyWebsite, labels
+        String jobLocation = cleanString(resultItems.get("jobLocation"));
+        String jobDescription = cleanString(resultItems.get("jobDescription"));
+        String companyWebsite = cleanString(resultItems.get("companyWebsite"));
+        String labels = cleanString(resultItems.get("labels"));
 
         // 更新数据库
-        databaseService.updateJobAndCompanyInfo(jobId, jobLocation, jobDescription, companyId, companyWebsite,labels);
+        databaseService.updateJobAndCompanyInfo(jobId, jobLocation, jobDescription, companyId, companyWebsite, labels);
 
         System.out.println("退出JobDetailPipeline进程.");
+    }
+
+    private String cleanString(String str) {
+        if (str == null) {
+            return null;
+        }
+        // 去除字符串两端的空白字符
+        str = str.trim();
+        // 替换字符串中的连续多个空白字符为一个空格
+        str = str.replaceAll("\\s+", " ");
+        return str;
     }
 }

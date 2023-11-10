@@ -1,6 +1,8 @@
 package com.example.webmagic.pipeline;
 
+import com.example.webmagic.domain.CompanyInfo;
 import com.example.webmagic.domain.JobCompanyInfo;
+import com.example.webmagic.domain.JobInfo;
 import com.example.webmagic.service.DatabaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,8 +30,13 @@ public class DatabasePipeline implements Pipeline {
             List<?> list = (List<?>) jobCompanyInfoObject;
             for (Object item : list) {
                 if (item instanceof JobCompanyInfo) {
-                    // 如果列表中的项是 JobCompanyInfo 类型的，处理它
                     JobCompanyInfo jobCompanyInfo = (JobCompanyInfo) item;
+
+                    // 清洗JobInfo和CompanyInfo中的数据
+                    cleanJobInfoData(jobCompanyInfo.getJobInfo());
+                    cleanCompanyInfoData(jobCompanyInfo.getCompanyInfo());
+
+                    // 将清洗后的数据对象传递给数据库服务进行处理
                     databaseService.processEntry(jobCompanyInfo);
                 } else {
                     System.err.println("列表中出现意外的项目类型: " + item.getClass());
@@ -38,5 +45,28 @@ public class DatabasePipeline implements Pipeline {
         } else {
             System.err.println("jobCompanyInfo 的对象类型异常: " + jobCompanyInfoObject.getClass());
         }
+    }
+
+    private void cleanJobInfoData(JobInfo jobInfo) {
+        if (jobInfo != null) {
+            jobInfo.setJobName(cleanString(jobInfo.getJobName()));
+            jobInfo.setSalary(cleanString(jobInfo.getSalary()));
+            jobInfo.setCity(cleanString(jobInfo.getCity()));
+            jobInfo.setExperience(cleanString(jobInfo.getExperience()));
+            jobInfo.setEducation(cleanString(jobInfo.getEducation()));
+            jobInfo.setJobDetails(cleanString(jobInfo.getJobDetails()));
+        }
+    }
+
+    private void cleanCompanyInfoData(CompanyInfo companyInfo) {
+        if (companyInfo != null) {
+            companyInfo.setCompanyName(cleanString(companyInfo.getCompanyName()));
+            companyInfo.setCompanyNature(cleanString(companyInfo.getCompanyNature()));
+            companyInfo.setCompanySize(cleanString(companyInfo.getCompanySize()));
+        }
+    }
+
+    private String cleanString(String str) {
+        return str != null ? str.trim().replaceAll("\\s+", " ") : null;
     }
 }

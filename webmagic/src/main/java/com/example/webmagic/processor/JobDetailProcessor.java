@@ -72,8 +72,15 @@ public class JobDetailProcessor implements PageProcessor {
             // 提取工作地点
             String jobLocation = html.xpath("//div[@class='job-address__content']/span[@class='job-address__content-text']/text()").get();
             // 提取职位描述
-            List<String> descriptionParts = html.xpath("//div[@class='describtion__detail-content']//text() | //div[@class='describtion__detail-content']/div//text() | //div[@class='describtion__detail-content']/p//text()").all();
-            String jobDescription = String.join("\n", descriptionParts);
+            List<String> descriptionParts = html.xpath(
+                    "//div[@class='describtion__detail-content']//text() " +
+                            "| //div[@class='describtion__detail-content']/div//text() " +
+                            "| //div[@class='describtion__detail-content']/div/div//text() " +
+                            "| //div[@class='describtion__detail-content']/p//text() " +
+                            "| //div[@class='describtion__detail-content']/div/p//text() "
+            ).all();
+
+            String jobDescription = String.join("\n", descriptionParts).trim();
             // 提取公司主页地址
             String companyWebsite = html.xpath("//a[@class='company__page-site']/@href").get();
             // 提取标签
