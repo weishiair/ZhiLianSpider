@@ -126,6 +126,7 @@ public class ZhilianJobProcessor implements PageProcessor {
                 jobInfo.setCity(getValue(cities, i));
                 jobInfo.setExperience(getValue(experiences, i));
                 jobInfo.setEducation(getValue(educations, i));
+                jobInfo.setSearchKeywords(keyword);  // 设置搜索关键词
                 companyInfo.setCompanyName(getValue(companies, i));
                 companyInfo.setCompanyNature(getValue(companyTypes, i));
                 companyInfo.setCompanySize(getValue(companySizes, i));
