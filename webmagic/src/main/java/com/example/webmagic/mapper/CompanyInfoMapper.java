@@ -44,7 +44,7 @@ public interface CompanyInfoMapper {
     List<CompanyInfo> findCompaniesWithWebsite();
 
     @Update("UPDATE company_info SET establishment_date = #{establishmentDate}, registered_capital = #{registeredCapital}, " +
-            "legal_representative = #{legalRepresentative}, company_address = #{companyAddress}, company_introduce = #{companyIntroduce} WHERE id = #{id}")
+            "legal_representative = #{legalRepresentative}, company_address = #{companyAddress}, company_introduce = #{companyIntroduce},last_update_time = #{lastUpdateTime} WHERE id = #{id}")
     int updateCompanyDetails(CompanyInfo companyInfo);
 
 

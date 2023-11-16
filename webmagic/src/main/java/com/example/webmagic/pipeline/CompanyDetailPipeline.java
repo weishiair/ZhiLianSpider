@@ -44,6 +44,9 @@ public class CompanyDetailPipeline implements Pipeline {
             }
         }
 
+        // 设置当前时间为最后更新时间
+        Date now = new Date();
+
         // 更新数据库
         databaseService.updateCompanyDetails(
                 companyId,
@@ -51,7 +54,8 @@ public class CompanyDetailPipeline implements Pipeline {
                 registeredCapital,
                 legalRepresentative,
                 companyAddress,
-                companyIntroduce
+                companyIntroduce,
+                now
         );
 
         System.out.println("退出CompanyDetailPipeline流程.");

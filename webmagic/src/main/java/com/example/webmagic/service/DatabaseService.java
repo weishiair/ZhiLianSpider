@@ -67,10 +67,10 @@ public class DatabaseService {
     }
 
     @Transactional
-    public void updateJobAndCompanyInfo(Integer jobId, String jobLocation, String jobDescription, Integer companyId, String companyWebsite, String labels) {
+    public void updateJobAndCompanyInfo(Integer jobId, String jobLocation, String jobDescription, Integer companyId, String companyWebsite, String labels,Date now) {
         System.out.println("进入 updateJobAndCompanyInfo 方法。");
         if (jobLocation != null || jobDescription != null || labels != null) {
-            jobInfoMapper.updateJobInfo(jobId, jobLocation, jobDescription, labels);
+            jobInfoMapper.updateJobInfo(jobId, jobLocation, jobDescription, labels,now);
         }
         if (companyWebsite != null) {
             companyInfoMapper.updateCompanyWebsite(companyId, companyWebsite);
@@ -128,9 +128,8 @@ public class DatabaseService {
     @Transactional
     public void updateCompanyDetails(Integer companyId, Date establishmentDate,
                                      String registeredCapital, String legalRepresentative,
-                                     String companyAddress,String companyIntroduce) {
+                                     String companyAddress,String companyIntroduce,Date now) {
         System.out.println("Entering updateCompanyDetails method.");
-
         // 创建一个新的 CompanyInfo 对象来保存更新的数据
         CompanyInfo companyInfo = new CompanyInfo();
         companyInfo.setId(companyId);  // 设置公司ID
@@ -139,7 +138,7 @@ public class DatabaseService {
         companyInfo.setLegalRepresentative(legalRepresentative);  // 设置法人代表
         companyInfo.setCompanyAddress(companyAddress);  // 设置公司地址
         companyInfo.setCompanyIntroduce(companyIntroduce);
-
+        companyInfo.setLastUpdateTime(now);  // 设置最后更新时间
         // 调用 Mapper 方法来更新数据库
         companyInfoMapper.updateCompanyDetails(companyInfo);
 

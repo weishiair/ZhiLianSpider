@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -38,8 +39,8 @@ public interface JobInfoMapper {
 
     @Select("SELECT id AS jobId, company_id AS companyId, job_details AS jobDetails FROM job_info WHERE job_description IS NULL OR job_location IS NULL")
     List<JobDetailInfo> findJobsForDetailScraping();
-    @Update("UPDATE job_info SET job_location = #{jobLocation}, job_description = #{jobDescription}, labels = #{labels} WHERE id = #{jobId}")
-    void updateJobInfo(@Param("jobId") Integer jobId, @Param("jobLocation") String jobLocation, @Param("jobDescription") String jobDescription, @Param("labels") String labels);
+    @Update("UPDATE job_info SET job_location = #{jobLocation}, job_description = #{jobDescription},last_update_time = #{lastUpdateTime}, labels = #{labels} WHERE id = #{jobId}")
+    void updateJobInfo(@Param("jobId") Integer jobId, @Param("jobLocation") String jobLocation, @Param("jobDescription") String jobDescription, @Param("labels") String labels,@Param("lastUpdateTime") Date lastUpdateTime);
     @Select("SELECT job_info.id, job_info.company_id FROM job_info " +
             "JOIN company_info ON job_info.company_id = company_info.id " +
             "WHERE job_info.job_location = #{jobLocation} AND company_info.company_website = #{companyWebsite}")

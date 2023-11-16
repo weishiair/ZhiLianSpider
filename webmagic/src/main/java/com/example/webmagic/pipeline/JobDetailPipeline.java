@@ -7,6 +7,8 @@ import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;
 
+import java.util.Date;
+
 @Component
 public class JobDetailPipeline implements Pipeline {
 
@@ -27,9 +29,10 @@ public class JobDetailPipeline implements Pipeline {
         String jobDescription = cleanString(resultItems.get("jobDescription"));
         String companyWebsite = cleanString(resultItems.get("companyWebsite"));
         String labels = cleanString(resultItems.get("labels"));
+        Date now = new Date();
 
         // 更新数据库
-        databaseService.updateJobAndCompanyInfo(jobId, jobLocation, jobDescription, companyId, companyWebsite, labels);
+        databaseService.updateJobAndCompanyInfo(jobId, jobLocation, jobDescription, companyId, companyWebsite, labels,now);
 
         System.out.println("退出JobDetailPipeline进程.");
     }
