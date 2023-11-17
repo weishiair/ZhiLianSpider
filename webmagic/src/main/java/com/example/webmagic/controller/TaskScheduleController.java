@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.Map;
+
+@CrossOrigin(origins = "http://localhost:8080") // 允许8080端口的跨域请求
 @RestController
 @RequestMapping("/api/task-schedules")
 public class TaskScheduleController {
@@ -79,11 +83,11 @@ public class TaskScheduleController {
         return ResponseEntity.ok().build();
     }
 
-    // 查看任务状态
     @GetMapping("/status/{id}")
     public ResponseEntity<?> getTaskStatus(@PathVariable Integer id) {
-        // 检查任务是否在scheduledTasks映射中，并且是否正在运行
         boolean isScheduled = dynamicTaskSchedulingService.isTaskScheduled(id);
-        return ResponseEntity.ok(isScheduled ? "RUNNING" : "STOPPED");
+        Map<String, String> status = Collections.singletonMap("status", isScheduled ? "RUNNING" : "STOPPED");
+        return ResponseEntity.ok(status);
     }
+
 }

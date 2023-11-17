@@ -149,6 +149,6 @@ public class CookieTestTask {
                 companyDetailSpider.run();
             }
         }
-        //webDriverProvider.destroy();  // 确保在完成所有任务后销毁 WebDriver 实例
+        webDriverProvider.destroy();  // 确保在完成所有任务后销毁 WebDriver 实例
     }
     }

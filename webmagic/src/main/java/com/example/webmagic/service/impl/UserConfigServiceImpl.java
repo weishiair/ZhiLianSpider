@@ -35,7 +35,7 @@ public class UserConfigServiceImpl extends ServiceImpl<UserConfigMapper, UserCon
     @Override
     public List<UserConfig> listActiveConfigs() {
         QueryWrapper<UserConfig> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("delete_flag", "N"); // 假设数据库字段为小写
+        queryWrapper.eq("delete_flag", "N");
         return list(queryWrapper);
     }
     @Override

@@ -38,10 +38,10 @@ public class TaskScheduleServiceImpl extends ServiceImpl<TaskScheduleMapper, Tas
         // 检查cron表达式是否发生了变化
         boolean cronChanged = !taskSchedule.getCronExpression().equals(taskScheduleData.getCronExpression());
 
-        // 更新任务计划数据
-        BeanUtils.copyProperties(taskScheduleData, taskSchedule);
-        boolean updated = this.updateById(taskSchedule);
 
+        // 更新任务计划数据，忽略id属性
+        BeanUtils.copyProperties(taskScheduleData, taskSchedule, "id");
+        boolean updated = this.updateById(taskSchedule);
         if (updated && cronChanged) {
             // 如果cron表达式发生了变化，重新调度任务
             dynamicTaskSchedulingService.rescheduleTask(taskScheduleId, taskSchedule.getCronExpression());

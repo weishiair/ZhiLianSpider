@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任务计划管理器</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+<div class="container mt-5">
+    <h2 class="mb-4">任务计划管理器</h2>
+
+    <!-- 创建或更新任务计划的表单 -->
+    <form id="taskForm" class="mb-4">
+        <div class="mb-3">
+            <label for="taskId" class="form-label">任务ID（更新、删除、启动、停止、状态查询时使用）</label>
+            <input type="number" class="form-control" id="taskId" placeholder="输入任务ID">
+        </div>
+        <div class="mb-3">
+            <label for="scheduleName" class="form-label">任务计划名称</label>
+            <input type="text" class="form-control" id="scheduleName" placeholder="输入任务计划名称">
+        </div>
+        <div class="mb-3">
+            <label for="cronExpression" class="form-label">CRON表达式</label>
+            <input type="text" class="form-control" id="cronExpression" placeholder="输入CRON表达式">
+        </div>
+        <div class="mb-3">
+            <label for="status" class="form-label">状态</label>
+            <input type="text" class="form-control" id="status" placeholder="输入状态">
+        </div>
+        <button type="button" onclick="createTaskSchedule()" class="btn btn-success">创建任务计划</button>
+        <button type="button" onclick="updateTaskSchedule()" class="btn btn-warning">更新任务计划</button>
+    </form>
+
+    <!-- 其他操作的按钮 -->
+    <button onclick="getAllTaskSchedules()" class="btn btn-primary">获取所有任务计划</button>
+    <button onclick="getTaskScheduleById()" class="btn btn-secondary">根据ID获取任务计划</button>
+    <button onclick="deleteTaskSchedule()" class="btn btn-danger">删除任务计划</button>
+    <button onclick="startTaskSchedule()" class="btn btn-info">启动任务</button>
+    <button onclick="stopTaskSchedule()" class="btn btn-dark">停止任务</button>
+    <button onclick="getTaskStatus()" class="btn btn-outline-primary">获取任务状态</button>
+
+    <div id="response" class="mt-4">
+        <!-- 响应内容将在这里显示 -->
+    </div>
+</div>
+
+<script>
+    const baseUrl = 'http://localhost:8080/api/task-schedules'; // 根据你的服务器地址调整
+
+    function createTaskSchedule() {
+        const taskData = getFormData();
+        axios.post(baseUrl, taskData)
+            .then(response => displayResponse(response))
+            .catch(error => displayError(error));
+    }
+
+    function updateTaskSchedule() {
+        const id = document.getElementById('taskId').value;
+        const taskData = getFormData();
+        axios.put(`${baseUrl}/${id}`, taskData)
+            .then(response => displayResponse(response))
+            .catch(error => displayError(error));
+    }
+
+    function getAllTaskSchedules() {
+        axios.get(baseUrl)
+            .then(response => displayResponse(response))
+            .catch(error => displayError(error));
+    }
+
+    function getTaskScheduleById() {
+        const id = document.getElementById('taskId').value;
+        axios.get(`${baseUrl}/${id}`)
+            .then(response => displayResponse(response))
+            .catch(error => displayError(error));
+    }
+
+    function deleteTaskSchedule() {
+        const id = document.getElementById('taskId').value;
+        axios.delete(`${baseUrl}/${id}`)
+            .then(response => displayResponse(response))
+            .catch(error => displayError(error));
+    }
+
+    function startTaskSchedule() {
+        const id = document.getElementById('taskId').value;
+        axios.post(`${baseUrl}/start/${id}`)
+            .then(response => displayResponse(response))
+            .catch(error => displayError(error));
+    }
+
+    function stopTaskSchedule() {
+        const id = document.getElementById('taskId').value;
+        axios.post(`${baseUrl}/stop/${id}`)
+            .then(response => displayResponse(response))
+            .catch(error => displayError(error));
+    }
+
+    function getTaskStatus() {
+        const id = document.getElementById('taskId').value;
+        axios.get(`${baseUrl}/status/${id}`)
+            .then(response => displayResponse(response))
+            .catch(error => displayError(error));
+    }
+
+    function getFormData() {
+        return {
+            scheduleName: document.getElementById('scheduleName').value,
+            cronExpression: document.getElementById('cronExpression').value,
+            status: document.getElementById('status').value
+        };
+    }
+
+    function displayResponse(response) {
+        document.getElementById('response').innerHTML = `<pre>${JSON.stringify(response.data, null, 2)}</pre>`;
+    }
+
+    function displayError(error) {
+        document.getElementById('response').innerHTML = `<pre>${error}</pre>`;
+    }
+</script>
+</body>
+
+</html>

@@ -23,6 +23,6 @@ public class Application implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // 启动随机点击线程
-        new Thread(randomClicker).start();
+       // new Thread(randomClicker).start();
     }
 }
