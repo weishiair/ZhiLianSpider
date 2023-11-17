@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:8080") // 允许8080端口的跨域请求
+@CrossOrigin(origins = "http://localhost:8081") // 允许8080端口的跨域请求
 @RestController
 @RequestMapping("/api/task-schedules")
 public class TaskScheduleController {
