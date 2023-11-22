@@ -10,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
+import java.util.List;
+
 @CrossOrigin(origins = "http://localhost:8081") // 允许8080端口的跨域请求
 @RestController
 @RequestMapping("/api/userconfig")
@@ -84,7 +87,8 @@ public class UserConfigController {
         return isSuccess ? ResponseEntity.ok().build() : ResponseEntity.badRequest().body("Failed to remove task schedule from user config.");
     }
     @GetMapping("/user-config-schedule/{userConfigId}")
-    public Integer getTaskScheduleId(@PathVariable Integer userConfigId) {
-        return userConfigScheduleService.getTaskScheduleIdByUserConfigId(userConfigId);
+    public List<Integer> getTaskScheduleIds(@PathVariable Integer userConfigId) {
+        return userConfigScheduleService.getTaskScheduleIdsByUserConfigId(userConfigId);
     }
+
 }

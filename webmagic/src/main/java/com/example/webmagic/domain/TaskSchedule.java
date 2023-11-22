@@ -132,20 +132,4 @@ public class TaskSchedule implements Serializable {
     }
 
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", scheduleName=").append(scheduleName);
-        sb.append(", cronExpression=").append(cronExpression);
-        sb.append(", status=").append(status);
-        sb.append(", lastRunTime=").append(lastRunTime);
-        sb.append(", nextRunTime=").append(nextRunTime);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
-    }
 }
