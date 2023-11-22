@@ -2,6 +2,9 @@ package com.example.webmagic.mapper;
 
 import com.example.webmagic.domain.UserConfigSchedule;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 /**
 * @author 10244
@@ -10,8 +13,10 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @Entity com.example.webmagic.domain.UserConfigSchedule
 */
 public interface UserConfigScheduleMapper extends BaseMapper<UserConfigSchedule> {
-
+    @Select("SELECT task_schedule_id FROM user_config_schedule WHERE user_config_id = #{userConfigId}")
+    List<Integer> findTaskScheduleIdsByUserConfigId(Integer userConfigId);
 }
+
 
 
 

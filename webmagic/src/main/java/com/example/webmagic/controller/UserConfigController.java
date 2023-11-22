@@ -3,6 +3,7 @@ package com.example.webmagic.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.webmagic.domain.UserConfig;
 import com.example.webmagic.service.TaskScheduleService;
+import com.example.webmagic.service.UserConfigScheduleService;
 import com.example.webmagic.service.UserConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +14,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 @RestController
 @RequestMapping("/api/userconfig")
 public class UserConfigController {
+    @Autowired
+    private UserConfigScheduleService userConfigScheduleService;
 
     private final UserConfigService userConfigService;
     private final TaskScheduleService taskScheduleService;
+
 
     @Autowired
     public UserConfigController(UserConfigService userConfigService, TaskScheduleService taskScheduleService) {
@@ -78,5 +82,9 @@ public class UserConfigController {
             @PathVariable Integer taskScheduleId) {
         boolean isSuccess = userConfigService.removeTaskScheduleFromUserConfig(userConfigId, taskScheduleId);
         return isSuccess ? ResponseEntity.ok().build() : ResponseEntity.badRequest().body("Failed to remove task schedule from user config.");
+    }
+    @GetMapping("/user-config-schedule/{userConfigId}")
+    public Integer getTaskScheduleId(@PathVariable Integer userConfigId) {
+        return userConfigScheduleService.getTaskScheduleIdByUserConfigId(userConfigId);
     }
 }

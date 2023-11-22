@@ -50,13 +50,13 @@ public class UserConfigServiceImpl extends ServiceImpl<UserConfigMapper, UserCon
             throw new NoSuchElementException("TaskSchedule not found with id: " + taskScheduleId);
         }
 
-        // 验证关联是否已经存在
+        // 检查这一对user_config_id和task_schedule_id的关联是否已经存在
         UserConfigSchedule queryResult = userConfigScheduleMapper.selectOne(new QueryWrapper<UserConfigSchedule>()
                 .eq("user_config_id", userConfigId)
                 .eq("task_schedule_id", taskScheduleId));
 
         if (queryResult != null) {
-            throw new IllegalArgumentException("The association between UserConfig and TaskSchedule already exists.");
+            throw new IllegalArgumentException("This association between UserConfig and TaskSchedule already exists.");
         }
 
         // 添加关联逻辑
@@ -67,6 +67,8 @@ public class UserConfigServiceImpl extends ServiceImpl<UserConfigMapper, UserCon
 
         return result > 0;
     }
+
+
 
     @Override
     public boolean removeTaskScheduleFromUserConfig(Integer userConfigId, Integer taskScheduleId) {

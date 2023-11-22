@@ -3,6 +3,8 @@ package com.example.webmagic.service;
 import com.example.webmagic.domain.UserConfigSchedule;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
 * @author 10244
 * @description 针对表【user_config_schedule】的数据库操作Service
@@ -10,5 +12,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface UserConfigScheduleService extends IService<UserConfigSchedule> {
 
-
+    List<Integer> getTaskScheduleIdsByUserConfigId(Integer userConfigId);
 }
+
