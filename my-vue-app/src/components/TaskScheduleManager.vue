@@ -84,7 +84,7 @@ export default {
         cronExpression: this.cronExpression,
         status: this.status
       };
-      axios.post('http://localhost:8080/api/task-schedules', taskData)
+      axios.post('/task-schedules', taskData)
           .then(response => this.response = JSON.stringify(response.data, null, 2))
           .catch(error => this.response = error.toString());
     },
@@ -94,37 +94,37 @@ export default {
         cronExpression: this.cronExpression,
         status: this.status
       };
-      axios.put(`http://localhost:8080/api/task-schedules/${this.taskId}`, taskData)
+      axios.put(`/task-schedules/${this.taskId}`, taskData)
           .then(response => this.response = JSON.stringify(response.data, null, 2))
           .catch(error => this.response = error.toString());
     },
     getAllTaskSchedules() {
-      axios.get('http://localhost:8080/api/task-schedules')
+      axios.get('/task-schedules')
           .then(response => this.response = JSON.stringify(response.data, null, 2))
           .catch(error => this.response = error.toString());
     },
     getTaskScheduleById() {
-      axios.get(`http://localhost:8080/api/task-schedules/${this.taskId}`)
+      axios.get(`/task-schedules/${this.taskId}`)
           .then(response => this.response = JSON.stringify(response.data, null, 2))
           .catch(error => this.response = error.toString());
     },
     deleteTaskSchedule() {
-      axios.delete(`http://localhost:8080/api/task-schedules/${this.taskId}`)
+      axios.delete(`/task-schedules/${this.taskId}`)
           .then(response => this.response = JSON.stringify(response.data, null, 2))
           .catch(error => this.response = error.toString());
     },
     startTaskSchedule() {
-      axios.post(`http://localhost:8080/api/task-schedules/start/${this.taskId}`)
+      axios.post(`/task-schedules/start/${this.taskId}`)
           .then(response => this.response = JSON.stringify(response.data, null, 2))
           .catch(error => this.response = error.toString());
     },
     stopTaskSchedule() {
-      axios.post(`http://localhost:8080/api/task-schedules/stop/${this.taskId}`)
+      axios.post(`/task-schedules/stop/${this.taskId}`)
           .then(response => this.response = JSON.stringify(response.data, null, 2))
           .catch(error => this.response = error.toString());
     },
     getTaskStatus() {
-      axios.get(`http://localhost:8080/api/task-schedules/status/${this.taskId}`)
+      axios.get(`/task-schedules/status/${this.taskId}`)
           .then(response => this.response = JSON.stringify(response.data, null, 2))
           .catch(error => this.response = error.toString());
     },
@@ -176,10 +176,6 @@ h2 {
 .btn-outline-secondary:hover {
   background-color: #6c757d;
   color: #fff;
-}
-
-.btn-info, .btn-danger, .btn-success, .btn-warning, .btn-outline-primary {
-  box-shadow: none;
 }
 
 #response pre {
