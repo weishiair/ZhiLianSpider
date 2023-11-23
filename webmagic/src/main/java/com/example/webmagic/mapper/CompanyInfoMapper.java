@@ -1,5 +1,6 @@
 package com.example.webmagic.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.webmagic.domain.CompanyDetailInfo;
 import com.example.webmagic.domain.CompanyInfo;
 import org.apache.ibatis.annotations.Mapper;
@@ -17,19 +18,7 @@ import java.util.List;
 * @Entity com.example.webmagic.domain.CompanyInfo
 */
 @Mapper
-public interface CompanyInfoMapper {
-
-    int deleteByPrimaryKey(Long id);
-
-    int insert(CompanyInfo record);
-
-    int insertSelective(CompanyInfo record);
-
-    CompanyInfo selectByPrimaryKey(Long id);
-
-    int updateByPrimaryKeySelective(CompanyInfo record);
-
-    int updateByPrimaryKey(CompanyInfo record);
+public interface CompanyInfoMapper extends BaseMapper<CompanyInfo> {
 
     @Select("SELECT LAST_INSERT_ID()")
     Integer getLastInsertId();
@@ -50,6 +39,5 @@ public interface CompanyInfoMapper {
 
     @Select("SELECT id AS companyId, company_website AS CompanyWebsite FROM company_info WHERE company_introduce IS NULL OR company_introduce = ''")
     List<CompanyDetailInfo> findCompaniesForDetailScraping();
-
 
 }

@@ -1,6 +1,6 @@
 package com.example.webmagic.mapper;
 
-import com.example.webmagic.domain.JobCompanyInfo;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.webmagic.domain.JobDetailInfo;
 import com.example.webmagic.domain.JobInfo;
 import org.apache.ibatis.annotations.Mapper;
@@ -19,20 +19,7 @@ import java.util.Map;
 * @Entity com.example.webmagic.domain.JobInfo
 */
 @Mapper
-public interface JobInfoMapper {
-
-    int deleteByPrimaryKey(Long id);
-
-    int insert(JobInfo record);
-
-    int insertSelective(JobInfo record);
-
-    JobInfo selectByPrimaryKey(Long id);
-
-    int updateByPrimaryKeySelective(JobInfo record);
-
-    int updateByPrimaryKey(JobInfo record);
-
+public interface JobInfoMapper extends BaseMapper<JobInfo> {
     @Select("SELECT * FROM job_info WHERE job_name = #{jobName} AND company_id = #{companyId}")
     JobInfo findByUniqueIdentifier(@Param("jobName") String jobName, @Param("companyId") Integer companyId);
 
