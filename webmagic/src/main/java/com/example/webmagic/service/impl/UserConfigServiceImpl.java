@@ -88,6 +88,20 @@ public class UserConfigServiceImpl extends ServiceImpl<UserConfigMapper, UserCon
 
         return result > 0;
     }
+    @Override
+    public List<UserConfig> searchConfigs(String searchValue) {
+        QueryWrapper<UserConfig> queryWrapper = new QueryWrapper<>();
+        if (searchValue != null && !searchValue.isEmpty()) {
+            queryWrapper
+                    .like("config_name", searchValue)
+                    .or()
+                    .like("city", searchValue)
+                    .or()
+                    .like("keyword", searchValue);
+        }
+        queryWrapper.eq("delete_flag", "N"); // 只查询未删除的配置
+        return list(queryWrapper);
+    }
 
 }
 

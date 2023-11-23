@@ -169,22 +169,5 @@ public class UserConfig implements Serializable {
         this.updateTime = updateTime;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", configName=").append(configName);
-        sb.append(", userId=").append(userId);
-        sb.append(", city=").append(city);
-        sb.append(", keyword=").append(keyword);
-        sb.append(", deleteFlag=").append(deleteFlag);
-        sb.append(", createTime=").append(createTime);
-        sb.append(", updateTime=").append(updateTime);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
-    }
+
 }

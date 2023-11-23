@@ -2,6 +2,7 @@ package com.example.webmagic.mapper;
 
 import com.example.webmagic.domain.TaskSchedule;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Select;
 
 /**
 * @author 10244
@@ -10,7 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @Entity com.example.webmagic.domain.TaskSchedule
 */
 public interface TaskScheduleMapper extends BaseMapper<TaskSchedule> {
-
 }
 
 

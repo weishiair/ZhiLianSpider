@@ -16,5 +16,7 @@ public interface UserConfigService extends IService<UserConfig> {
     boolean addTaskScheduleToUserConfig(Integer userConfigId, Integer taskScheduleId);
 
     boolean removeTaskScheduleFromUserConfig(Integer userConfigId, Integer taskScheduleId);
+
+    List<UserConfig> searchConfigs(String searchValue);
 }
 

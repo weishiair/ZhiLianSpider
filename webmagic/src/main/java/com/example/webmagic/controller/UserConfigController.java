@@ -90,5 +90,11 @@ public class UserConfigController {
     public List<Integer> getTaskScheduleIds(@PathVariable Integer userConfigId) {
         return userConfigScheduleService.getTaskScheduleIdsByUserConfigId(userConfigId);
     }
+    @GetMapping("/search")
+    public List<UserConfig> searchUserConfigs(
+            @RequestParam(required = false) String searchValue) {
+        return userConfigService.searchConfigs(searchValue);
+    }
+
 
 }
