@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "dev": "webpack-dev-server --disableHostCheck=true --inline --progress --config build/webpack.dev.conf.js"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.1.0",
@@ -45,4 +46,5 @@
     "not dead",
     "not ie 11"
   ]
+
 }

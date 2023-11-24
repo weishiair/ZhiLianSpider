@@ -125,6 +125,7 @@
         <el-button @click="taskScheduleDialogVisible = false">取消</el-button>
         <el-button type="primary" @click="addTaskSchedule" v-if="!relatedTaskScheduleIds.includes(taskScheduleId)">添加关联</el-button>
         <el-button type="danger" @click="removeTaskSchedule" v-if="relatedTaskScheduleIds.includes(taskScheduleId)">删除关联</el-button>
+
       </template>
 
     </el-dialog>
@@ -273,16 +274,19 @@ export default {
     },
 
     handleSelectionChange(selection) {
-      // 更新选中配置的状态
-      this.selectedConfig = selection;
-
-      // 如果没有选中任何配置或选中多个配置，禁用修改和关联任务计划按钮
+      this.selectedConfig = selection[0]; // 假设只选择了一个配置
       this.isUpdateDisabled = selection.length !== 1;
       this.isTaskScheduleDisabled = selection.length !== 1;
-
-      // 如果至少选中一个配置，启用删除按钮
       this.isDeleteDisabled = selection.length === 0;
+
+      // 如果选中了一个配置，获取与之相关的任务计划ID列表
+      if (selection.length === 1) {
+        this.getRelatedTaskSchedules(selection[0].id);
+      } else {
+        this.relatedTaskScheduleIds = []; // 如果没有选择或选择了多个，则清空关联ID列表
+      }
     },
+
 
     showCreateDialog() {
       this.newConfig = { configName: '', userId: null, city: '', keyword: '', deleteFlag: 'N' };
@@ -318,34 +322,36 @@ export default {
         axios.post(`/userconfig/${this.selectedConfig.id}/task-schedules/${this.taskScheduleId}`)
             .then(() => {
               this.getRelatedTaskSchedules(this.selectedConfig.id); // 更新关联的任务计划ID列表
-              // 处理成功逻辑，例如提示用户
             })
-            .catch(() => {
-              // 处理错误逻辑，例如提示用户
+            .catch(error => {
+              console.error('Error adding task schedule:', error);
             });
       }
     },
+
     removeTaskSchedule() {
       if (this.selectedConfig && this.taskScheduleId) {
         axios.delete(`/userconfig/${this.selectedConfig.id}/task-schedules/${this.taskScheduleId}`)
             .then(() => {
               this.getRelatedTaskSchedules(this.selectedConfig.id); // 更新关联的任务计划ID列表
-              // 处理成功逻辑，例如提示用户
             })
-            .catch(() => {
-              // 处理错误逻辑，例如提示用户
+            .catch(error => {
+              console.error('Error removing task schedule:', error);
             });
       }
     },
+
     getRelatedTaskSchedules(userConfigId) {
-      axios.get(`/userconfig/user-config-schedule/${userConfigId}`)
+      axios.get(`userconfig/user-config-schedule/${userConfigId}`)
           .then(response => {
-            this.relatedTaskScheduleIds = [...response.data]; // 使用新数组替换旧数组
+            this.relatedTaskScheduleIds = response.data; // 假设响应数据是任务计划ID的数组
           })
           .catch(error => {
             console.error('Error fetching related task schedules:', error);
+            this.relatedTaskScheduleIds = []; // 出错时清空数组
           });
     },
+
     searchUserConfigs() {
       const params = {
         searchValue: this.searchQuery, // 将用户输入的搜索词作为查询参数

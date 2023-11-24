@@ -25,6 +25,16 @@
             <i class="el-icon-s-tools"></i>
             <span><router-link to="/task-schedule-manager">任务计划管理</router-link></span>
           </el-menu-item>
+          <!-- 新增工作信息管理菜单项 -->
+          <el-menu-item index="/job-info">
+            <i class="el-icon-document"></i>
+            <span><router-link to="/job-info">工作信息管理</router-link></span>
+          </el-menu-item>
+          <el-menu-item index="/company-info">
+            <i class="el-icon-office-building"></i>
+            <span><router-link to="/company-info">公司信息管理</router-link></span>
+          </el-menu-item>
+
           <!-- 更多菜单项 -->
         </el-menu>
       </el-aside>
