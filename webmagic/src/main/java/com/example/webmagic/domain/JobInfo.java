@@ -346,32 +346,5 @@ public class JobInfo implements Serializable {
         this.education = education;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", jobName=").append(jobName);
-        sb.append(", companyId=").append(companyId);
-        sb.append(", salary=").append(salary);
-        sb.append(", city=").append(city);
-        sb.append(", experience=").append(experience);
-        sb.append(", labels=").append(labels);
-        sb.append(", lastUpdateTime=").append(lastUpdateTime);
-        sb.append(", searchKeywords=").append(searchKeywords);
-        sb.append(", jobDescription=").append(jobDescription);
-        sb.append(", jobLocation=").append(jobLocation);
-        sb.append(", deleteFlag=").append(deleteFlag);
-        sb.append(", createTime=").append(createTime);
-        sb.append(", updateBy=").append(updateBy);
-        sb.append(", updateTime=").append(updateTime);
-        sb.append(", createBy=").append(createBy);
-        sb.append(", jobDetails=").append(jobDetails);
-        sb.append(", education=").append(education);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
-    }
+
 }

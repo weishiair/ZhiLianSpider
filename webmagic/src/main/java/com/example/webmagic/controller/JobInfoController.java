@@ -1,5 +1,6 @@
 package com.example.webmagic.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.webmagic.domain.JobInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/jobinfo")
+@RequestMapping("api/jobinfo")
 public class JobInfoController {
 
     @Autowired
@@ -43,11 +44,15 @@ public class JobInfoController {
         return jobInfo != null ? ResponseEntity.ok(jobInfo) : ResponseEntity.ok("未找到相应工作信息");
     }
 
-    // 获取所有工作信息
+    // 获取所有工作信息（分页）
     @GetMapping("/all")
-    public ResponseEntity<?> getAllJobInfos() {
-        List<JobInfo> jobInfos = jobInfoService.list();
-        return ResponseEntity.ok(jobInfos);
+    public ResponseEntity<?> getAllJobInfos(
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "10") Integer size) {
+        Page<JobInfo> jobInfoPage = new Page<>(page, size);
+        jobInfoService.page(jobInfoPage);
+        return ResponseEntity.ok(jobInfoPage);
     }
+
 
 }

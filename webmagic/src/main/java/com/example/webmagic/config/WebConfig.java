@@ -13,9 +13,10 @@ public class WebConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**") // 对所有的路径应用CORS配置
-                        .allowedOrigins("http://localhost:8081") // 允许来自8080端口的跨域请求
-                        .allowedMethods("GET", "POST", "PUT", "DELETE"); // 允许的HTTP方法
+                registry.addMapping("/**")
+                        .allowedOriginPatterns("*") // 使用allowedOriginPatterns代替allowedOrigins
+                        .allowedMethods("GET", "POST", "PUT", "DELETE")
+                        .allowCredentials(true);
             }
         };
     }
