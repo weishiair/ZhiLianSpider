@@ -4,6 +4,7 @@ import UserConfig from '../components/UserConfig.vue';
 import TaskScheduleManager from '../components/TaskScheduleManager.vue';
 import JobInfoView from '../components/JobInfoView.vue'; // 引入 JobInfoView 组件
 import CompanyInfoView from '../components/CompanyInfoView.vue';
+import HomePage from "../components/homePage.vue";
 
 const routes = [
     {
@@ -25,7 +26,12 @@ const routes = [
         path: '/company-info', // 新增路由路径
         name: 'CompanyInfo',
         component: CompanyInfoView
-    }
+    },
+    {
+        path: '/',
+        name: 'HomePage',
+        component: HomePage
+    },
 ];
 
 const index = createRouter({

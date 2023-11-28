@@ -128,4 +128,23 @@ export default {
 .aside-menu::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, .1); /* 滚动条轨道颜色 */
 }
+.welcome-section {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.welcome-section h1 {
+  color: #324157;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.welcome-section p {
+  color: #606266;
+  font-size: 16px;
+  line-height: 1.6;
+}
 </style>
