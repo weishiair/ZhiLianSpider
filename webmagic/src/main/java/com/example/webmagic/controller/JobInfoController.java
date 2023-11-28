@@ -1,8 +1,10 @@
 package com.example.webmagic.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.webmagic.domain.JobInfo;
+import com.example.webmagic.mapper.JobInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,8 @@ public class JobInfoController {
 
     @Autowired
     private IService<JobInfo> jobInfoService;
+    @Autowired
+    private JobInfoMapper jobInfoMapper;
 
     // 添加工作信息
     @PostMapping("/add")
@@ -44,14 +48,20 @@ public class JobInfoController {
         return jobInfo != null ? ResponseEntity.ok(jobInfo) : ResponseEntity.ok("未找到相应工作信息");
     }
 
-    // 获取所有工作信息（分页）
+    // 获取所有工作信息（分页），包括公司名称
     @GetMapping("/all")
     public ResponseEntity<?> getAllJobInfos(
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
         Page<JobInfo> jobInfoPage = new Page<>(page, size);
-        jobInfoService.page(jobInfoPage);
-        return ResponseEntity.ok(jobInfoPage);
+        IPage<JobInfo> result = jobInfoMapper.getAllJobInfos(jobInfoPage);
+        return ResponseEntity.ok(result);
+    }
+    // 根据ID获取工作信息及公司名称
+    @GetMapping("/getWithCompanyName/{id}")
+    public ResponseEntity<?> getJobInfoWithCompanyNameById(@PathVariable Integer id) {
+        JobInfo jobInfo = jobInfoMapper.findJobInfoWithCompanyNameById(id);
+        return jobInfo != null ? ResponseEntity.ok(jobInfo) : ResponseEntity.ok("未找到相应工作信息");
     }
 
 

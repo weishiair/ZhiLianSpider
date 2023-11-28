@@ -4,12 +4,11 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 
  * @TableName job_info
  */
 public class JobInfo implements Serializable {
     /**
-     * 
+     *
      */
     private Integer id;
 
@@ -106,17 +105,20 @@ public class JobInfo implements Serializable {
      */
     private String education;
 
+
+    private String companyName; // 新增公司名称属性
+
     private static final long serialVersionUID = 1L;
 
     /**
-     * 
+     *
      */
     public Integer getId() {
         return id;
     }
 
     /**
-     * 
+     *
      */
     public void setId(Integer id) {
         this.id = id;
@@ -346,5 +348,12 @@ public class JobInfo implements Serializable {
         this.education = education;
     }
 
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.example.webmagic.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.webmagic.domain.JobDetailInfo;
 import com.example.webmagic.domain.JobInfo;
 import org.apache.ibatis.annotations.Mapper;
@@ -32,4 +33,14 @@ public interface JobInfoMapper extends BaseMapper<JobInfo> {
             "JOIN company_info ON job_info.company_id = company_info.id " +
             "WHERE job_info.job_location = #{jobLocation} AND company_info.company_website = #{companyWebsite}")
     Map<String, Integer> getJobAndCompanyIds(String jobLocation, String companyWebsite);
+
+    @Select("SELECT job_info.*, company_info.company_name as company_name FROM job_info " +
+            "JOIN company_info ON job_info.company_id = company_info.id " +
+            "WHERE job_info.id = #{id}")
+    JobInfo findJobInfoWithCompanyNameById(@Param("id") Integer id);
+
+    // 修改分页查询方法
+    @Select("SELECT job_info.*, company_info.company_name as company_name FROM job_info " +
+            "JOIN company_info ON job_info.company_id = company_info.id")
+    IPage<JobInfo> getAllJobInfos(IPage<?> page);
 }
