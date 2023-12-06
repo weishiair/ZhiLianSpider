@@ -56,6 +56,15 @@ export default {
 </script>
 
 <style scoped>
+/* 全局样式文件（例如 App.vue 或 styles.css）*/
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+
 .header {
   background-color: #324157; /* 顶部导航栏背景色 */
   color: #fff; /* 文字颜色 */

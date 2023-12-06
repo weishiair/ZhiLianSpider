@@ -5,6 +5,7 @@ import ElementPlus from 'element-plus';
 import 'element-plus/theme-chalk/index.css'  // 引入 ElementPlus 组件样式
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './global.css' // 引入全局样式文件
 
 const app = createApp(App);
 app.config.globalProperties.$axios = axios;

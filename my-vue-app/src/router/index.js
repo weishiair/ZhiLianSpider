@@ -5,6 +5,7 @@ import TaskScheduleManager from '../components/TaskScheduleManager.vue';
 import JobInfoView from '../components/JobInfoView.vue'; // 引入 JobInfoView 组件
 import CompanyInfoView from '../components/CompanyInfoView.vue';
 import HomePage from "../components/homePage.vue";
+import CompanyDetailView from '../components/CompanyDetailView.vue';
 
 const routes = [
     {
@@ -31,6 +32,12 @@ const routes = [
         path: '/',
         name: 'HomePage',
         component: HomePage
+    },
+    {
+        path: '/company-detail/:id', // 添加一个带参数的路由
+        name: 'CompanyDetail',
+        component: CompanyDetailView,
+        props: true // 启用 props 将路由参数传递给组件
     },
 ];
 
